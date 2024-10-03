@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    user-select: none;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+  }
+
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .scrollbar-hidden {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+
+  .line {
+    background: repeating-linear-gradient(
+        to bottom,
+        #eee,
+        #eee 1px,
+        #fff 1px,
+        #fff 8%
+    );
+}
+.tick {
+    background: repeating-linear-gradient(
+        to right,
+        #eee,
+        #eee 1px,
+        #fff 1px,
+        #fff 5%
+    );
+}
+
+
+@keyframes gradient-x {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  
+  .animate-gradient-x {
+    background-size: 200% 300%;
+    animation: gradient-x 10s ease infinite;
+  }
