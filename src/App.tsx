@@ -12,7 +12,7 @@ function App() {
       <ApiProvider>
         <AuthProvider>
           <BrowserRouter>
-            <Toaster position="bottom-right" expand={false} />
+            <Toaster position="top-right" richColors expand={false} />
             <AppRouter />
           </BrowserRouter>
         </AuthProvider>
