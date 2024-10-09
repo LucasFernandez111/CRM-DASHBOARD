@@ -1,14 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { axiosCustom } from "../../../api/axios";
-import { toast } from "sonner";
-import { BodyTableProps } from "../../../common/interfaces/body-table.interface";
+import React, { useState, useEffect } from 'react';
+import { axiosCustom } from '../../../api/axios';
+import { toast } from 'sonner';
+import { BodyTableProps } from '../../../common/interfaces/body-table.interface';
 
-const BodyTable: React.FC<BodyTableProps> = ({
-  orders,
-  onEditRow,
-  setOnEditRow,
-}) => {
-  // Estado para almacenar los datos editados temporalmente
+const BodyTable: React.FC<BodyTableProps> = ({ orders, onEditRow, setOnEditRow }) => {
   const [editedData, setEditedData] = useState<string[][]>([]);
 
   useEffect(() => {
@@ -17,33 +12,26 @@ const BodyTable: React.FC<BodyTableProps> = ({
     }
   }, [orders]);
 
-  // Función para manejar los cambios en las celdas editadas
-  const handleInputChange = (
-    value: string,
-    rowIndex: number,
-    cellIndex: number
-  ) => {
-    if (!editedData[rowIndex]) return; // Previene el acceso a un índice que no existe
+  const handleInputChange = (value: string, rowIndex: number, cellIndex: number) => {
+    if (!editedData[rowIndex]) return;
     const newData = [...editedData];
     newData[rowIndex][cellIndex] = value;
     setEditedData(newData);
   };
 
-  // Función para manejar la acción de guardar los datos editados
   const handleSave = async (rowIndex: number) => {
     const range = `A${rowIndex + 2}:D${rowIndex + 2}`;
-
     const values = editedData[rowIndex];
 
-    const promise = axiosCustom.put("/user/sheet", {
+    const promise = axiosCustom.put('/user/sheet', {
       range,
       values,
     });
-    setOnEditRow(0);
+    setOnEditRow(null); // Cambié a null cuando no hay fila en edición
     return toast.promise(promise, {
-      loading: "Cargando...",
-      success: "Datos actualizados exitosamente",
-      error: "Error",
+      loading: 'Cargando...',
+      success: 'Datos actualizados exitosamente',
+      error: 'Error',
     });
   };
 
@@ -60,15 +48,13 @@ const BodyTable: React.FC<BodyTableProps> = ({
                 <th
                   key={cellIndex}
                   scope="row"
-                  className=" py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  className="py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                 >
                   {onEditRow === rowIndex ? (
                     <input
                       type="text"
                       value={cell}
-                      onChange={(e) =>
-                        handleInputChange(e.target.value, rowIndex, cellIndex)
-                      }
+                      onChange={(e) => handleInputChange(e.target.value, rowIndex, cellIndex)}
                       className="p-2 border-none focus:outline-none bg-transparent text-center"
                     />
                   ) : (
@@ -79,13 +65,9 @@ const BodyTable: React.FC<BodyTableProps> = ({
             <td className="px-2 py-4">
               <button
                 className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                onClick={() =>
-                  onEditRow === rowIndex
-                    ? handleSave(rowIndex)
-                    : setOnEditRow(rowIndex)
-                }
+                onClick={() => (onEditRow === rowIndex ? handleSave(rowIndex) : setOnEditRow(rowIndex))}
               >
-                {onEditRow === rowIndex ? "Guardar" : "Editar"}
+                {onEditRow === rowIndex ? 'Guardar' : 'Editar'}
               </button>
             </td>
           </tr>

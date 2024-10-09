@@ -1,6 +1,6 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
-import OrderForm from "./OrderForm";
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment, useState } from 'react';
+import OrderForm from './OrderForm';
 
 export default function ModalOrder({ children, title }: any) {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,10 +15,7 @@ export default function ModalOrder({ children, title }: any) {
 
   return (
     <>
-      <div
-        onClick={openModal}
-        className="inline-block transition duration-300 hover:scale-125"
-      >
+      <div onClick={openModal} className="inline-block transition duration-300 hover:scale-125">
         {children}
       </div>
 
@@ -49,11 +46,8 @@ export default function ModalOrder({ children, title }: any) {
                 leaveTo="opacity-0 scale-95"
               >
                 {/* Modal con fondo blanco */}
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
-                  >
+                <Dialog.Panel className="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
                     {title}
                   </Dialog.Title>
                   <div className="mt-2">

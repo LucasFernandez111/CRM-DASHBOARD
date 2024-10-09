@@ -19,7 +19,7 @@ export const getUser = async () => {
 
 export const getStatistics = async () => {
   try {
-    const response: AxiosResponse = await fetchApi('statistics');
+    const response: AxiosResponse = await fetchApi('/orders/statistics/sales');
     return response.data;
   } catch (error) {
     throw new Error('Error fetching statistics');

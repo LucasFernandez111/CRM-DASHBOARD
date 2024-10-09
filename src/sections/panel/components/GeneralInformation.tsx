@@ -4,14 +4,7 @@ import { axiosCustom } from '../../../api/axios';
 import { UpdateUser } from '../../../common/interfaces/user/update-user.interface';
 import { UserResponse } from '../../../common/interfaces/api/response.interface';
 
-const GeneralInformation: React.FC<UserResponse> = ({
-  firstName = '',
-  email = '',
-  address = '',
-  phone = '',
-  sheetId = '',
-  company = '',
-}) => {
+const GeneralInformation = ({ firstName, email, address, phone, sheetId, company }: UserResponse) => {
   const [updateUser, setUpdateUser] = useState<UpdateUser>({});
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -89,9 +82,9 @@ const GeneralInformation: React.FC<UserResponse> = ({
           <input
             type="text"
             id="sheet-id"
-            onChange={(e) => setUpdateUser({ ...updateUser, sheet: e.target.value })}
+            onChange={(e) => setUpdateUser({ ...updateUser, sheetId: e.target.value })}
             className="bg-gray-50 placeholder:text-gray-800 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-3"
-            placeholder={sheet}
+            placeholder={sheetId}
           />
         </div>
         <div className="mb-6">

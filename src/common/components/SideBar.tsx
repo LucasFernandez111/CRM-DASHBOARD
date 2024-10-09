@@ -1,13 +1,14 @@
-import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import DateRangeComp from "./DateRangeComp";
-import { DateContext } from "../../context/DateContextProvider";
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import DateRangeComp from './DateRangeComp';
+import { DateContext } from '../../context/DateContextProvider';
 
-const SideBar = () => {
+export const SideBar: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const { dateRange } = useContext(DateContext);
+
   const handleItemClick = (index: number | null) => {
     setActiveIndex(index);
   };
@@ -17,37 +18,40 @@ const SideBar = () => {
   };
 
   return (
-    <aside className="bg-white lg:col-span-1 flex justify-between flex-col lg:py-4 font-extrabold xl:text-4xl lg:text-2xl md:text-xl">
-      <ul className="flex flex-1 justify-center items-center flex-col w-full gap-9 text-customSteelblue">
-        {["VENTAS", "PEDIDOS", "MENU"].map((section, index) => (
+    <aside className="xl:col-span-1 lg:bg-black sm:bg-slate-500 xl:bg-red-400">
+      <div className="flex h-full flex-col justify-around">
+        <ul className="text-2xl font-extrabold flex gap-11 p-2 flex-col text-customSteelblue ">
           <li
-            key={index}
-            onClick={() => {
-              handleItemClick(index);
-              handleNavigation(section);
-            }}
-            className={`hover:bg-slate-400 hover:bg-opacity-15 hover:text-sky-400 ${
-              activeIndex === index ? "text-white bg-sky-600" : ""
-            } hover:transition duration-200 p-4 w-full rounded-r-xl`}
+            className="cursor-pointer  hover:text-sky-400 transition duration-200"
+            onClick={() => handleNavigation('VENTAS')}
           >
-            {section}
+            VENTAS
           </li>
-        ))}
-      </ul>
-
-      <div
-        onClick={() => {
-          handleItemClick(null);
-          setIsOpen(!isOpen);
-        }}
-        className="flex flex-col justify-center items-center cursor-pointer text-center rounded-3xl hover:bg-slate-400 hover:bg-opacity-15 hover:text-sky-400 hover:transition duration-200 p-6 gap-5"
-      >
-        <span>FILTRAR POR FECHA</span>
-        <span className="text-xl text-wrap">{`${dateRange?.startDate} HASTA  ${dateRange?.endDate}`}</span>
-        <DateRangeComp isOpen={isOpen} setIsOpen={setIsOpen} />
+          <li
+            className="cursor-pointer hover:text-sky-400 transition duration-200"
+            onClick={() => handleNavigation('PEDIDOS')}
+          >
+            PEDIDOS
+          </li>
+          <li
+            className="cursor-pointer hover:text-sky-400 transition duration-200"
+            onClick={() => handleNavigation('MENU')}
+          >
+            MENU
+          </li>
+        </ul>
+        <div
+          className="cursor-pointer"
+          onClick={() => {
+            handleItemClick(null);
+            setIsOpen(!isOpen);
+          }}
+        >
+          <h2 className="text-xl text-customSteelblue font-extrabold mb-2">FECHA</h2>
+          <DateRangeComp isOpen={isOpen} setIsOpen={setIsOpen} />
+          <h4 className="text-sm mt-2">{`${dateRange?.startDate || ''} - ${dateRange?.endDate || ''}`}</h4>
+        </div>
       </div>
     </aside>
   );
 };
-
-export default SideBar;

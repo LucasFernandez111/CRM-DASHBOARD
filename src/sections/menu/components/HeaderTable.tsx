@@ -1,4 +1,4 @@
-import { BiSolidEditAlt } from "react-icons/bi";
+import { BiSolidEditAlt } from 'react-icons/bi';
 const HeadersTable = ({ headers }: { headers: string[] }) => {
   return (
     <tr>

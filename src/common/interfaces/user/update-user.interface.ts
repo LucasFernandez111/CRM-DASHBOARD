@@ -1,5 +1,5 @@
 export interface UpdateUser {
-  phone?: number;
+  phone?: string;
   address?: string;
   sheetId?: string;
   company?: string;
