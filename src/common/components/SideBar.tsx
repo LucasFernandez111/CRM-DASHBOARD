@@ -14,7 +14,7 @@ export const SideBar: React.FC = () => {
   };
 
   const handleNavigation = (section: string) => {
-    navigate(`/${section.toLowerCase()}`);
+    navigate(section);
   };
 
   return (
@@ -23,19 +23,19 @@ export const SideBar: React.FC = () => {
         <ul className="text-2xl font-extrabold flex gap-11 p-2 flex-col text-customSteelblue ">
           <li
             className="cursor-pointer  hover:text-sky-400 transition duration-200"
-            onClick={() => handleNavigation('VENTAS')}
+            onClick={() => handleNavigation('ventas')}
           >
             VENTAS
           </li>
           <li
             className="cursor-pointer hover:text-sky-400 transition duration-200"
-            onClick={() => handleNavigation('PEDIDOS')}
+            onClick={() => handleNavigation('orders')}
           >
             PEDIDOS
           </li>
           <li
             className="cursor-pointer hover:text-sky-400 transition duration-200"
-            onClick={() => handleNavigation('MENU')}
+            onClick={() => handleNavigation('menu')}
           >
             MENU
           </li>
