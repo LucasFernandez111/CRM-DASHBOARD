@@ -6,7 +6,7 @@ const getOrders = (): Promise<Order> => instance.get(ENDPOINTS.ORDERS);
 
 const getPDFOrders = (id: string) => (window.location.href = `${BASE_URL}/${ENDPOINTS.ORDERS_PDF}${id}`);
 
-const deleteOrder = (id: string) => instance.post(`${ENDPOINTS.ORDERS}/${id}`);
+const deleteOrder = (id: string) => instance.delete(`${ENDPOINTS.ORDERS}/${id}`);
 
 const updateOrder = (id: string, order: any) => instance.put(`${ENDPOINTS.ORDERS}/${id}`, order);
 
