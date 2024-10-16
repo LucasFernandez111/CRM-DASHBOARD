@@ -16,14 +16,13 @@ export interface Customer {
   name: string;
   phone: string;
   address: Address;
-  _id: string;
 }
 
 export interface Address {
   street: string;
   city: string;
   postalCode: string;
-  country: string;
+  country?: string;
 }
 
 export interface Item {
@@ -32,12 +31,13 @@ export interface Item {
   description: string;
   quantity: number;
   price: number;
-  _id: string;
 }
 
 export interface PaymentDetails {
   method: string;
   transactionId: string;
   status: string;
-  _id: string;
 }
+
+export interface CreateOrder
+  extends Omit<Order, '_id' | 'createdAt' | 'updatedAt' | '__v' | 'userId' | 'orderNumber' | 'totalAmount'> {}
