@@ -1,8 +1,10 @@
-import { BASE_URL, instance } from './base.api';
+import { instance, BASE_URL } from './base.api';
 import { ENDPOINTS } from './endpoints';
-import { Order } from './interfaces/order.interface';
+import { Order, CreateOrder } from './interfaces';
 
 const getOrders = (): Promise<Order> => instance.get(ENDPOINTS.ORDERS);
+
+const createOrder = (order: CreateOrder): Promise<Order> => instance.post(ENDPOINTS.ORDERS, order);
 
 const getPDFOrders = (id: string) => (window.location.href = `${BASE_URL}/${ENDPOINTS.ORDERS_PDF}${id}`);
 
@@ -19,4 +21,5 @@ export const orders = {
   getPDFOrders,
   deleteOrder,
   getOrdersForRange,
+  createOrder,
 };
