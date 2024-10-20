@@ -1,8 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
-import { RouterLayout } from '../common/RouterLayout';
+import { RouterLayout } from '../components/RouterLayout';
 import { HomePage } from '../pages/home';
-import { LoginPage } from '../pages';
-import { Orders } from '../sections/pedidos/Orders';
+import { LoginPage } from '@/pages/login';
+
+import { OrdersPage } from '@/pages/Orders';
 
 export const AppRouter: React.FC<{}> = () => {
   return (
@@ -11,7 +12,7 @@ export const AppRouter: React.FC<{}> = () => {
 
       <Route path="/" element={<RouterLayout />}>
         <Route path="/" element={<HomePage />} />
-        <Route path="/orders" element={<Orders />} />
+        <Route path="/orders" element={<OrdersPage />} />
       </Route>
     </Routes>
   );
