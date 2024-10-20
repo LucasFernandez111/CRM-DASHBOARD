@@ -1,31 +1,48 @@
+export enum OrderStatus {
+  PENDIENTE = 'PENDIENTE',
+  PROCESANDO = 'PROCESANDO',
+  ENTREGADO = 'ENTREGADO',
+  CANCELADO = 'CANCELADO',
+}
+
+export enum PaymentStatus {
+  PENDIENTE = 'PENDIENTE',
+  COMPLETADO = 'COMPLETADO',
+  FALLIDO = 'FALLIDO',
+}
+
+export enum PaymentMethod {
+  TRANSFERENCIA = 'TRANSFERENCIA',
+  EFECTIVO = 'EFECTIVO',
+}
 export interface Order {
   userId: string;
   orderNumber: number;
-  customer: Customer;
-  items: Item[];
-  paymentDetails: PaymentDetails;
+  customer: OrderCustomer;
+  items: OrderItem[];
+  paymentDetails: OrderPaymentDetails;
   totalAmount: number;
-  orderStatus: string;
+  orderStatus: OrderStatus;
   _id: string;
   createdAt: Date;
   updatedAt: Date;
   __v: number;
 }
 
-export interface Customer {
+export interface OrderCustomer {
   name: string;
   phone: string;
-  address: Address;
+  address: OrderAdress;
 }
 
-export interface Address {
+export interface OrderAdress {
   street: string;
   city: string;
   postalCode: string;
   country?: string;
 }
 
-export interface Item {
+export interface OrderItem {
   category: string;
   subcategory: string;
   description: string;
@@ -33,10 +50,10 @@ export interface Item {
   price: number;
 }
 
-export interface PaymentDetails {
+export interface OrderPaymentDetails {
   method: string;
-  transactionId: string;
-  status: string;
+  transactionId?: string;
+  status?: string;
 }
 
 export interface CreateOrder
