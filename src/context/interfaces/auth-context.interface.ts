@@ -1,4 +1,4 @@
-import { User } from '../../common/interfaces';
+import { User } from '@/api';
 
 export default interface AuthContextValues {
   isAuthenticatedUser: () => Boolean;
