@@ -1,11 +1,12 @@
+import { LOGO_WB } from '@/assets';
 import { Link } from 'react-router-dom';
 
 export default function NavBar() {
   return (
     <nav className="col-span-full  p-4">
       <div className="flex justify-around">
-        <div className="w-20 bg-customSteelblue rounded-xl">
-          <img src="https://i.postimg.cc/DwXfrjpH/Mesa-de-trabajo-3.png" alt="logo" className=" object-cover" />
+        <div className="max-w-20 max-height-20 bg-customSteelblue rounded-2xl">
+          <img src={LOGO_WB} alt="Logo Company" className=" object-cover size-20" />
         </div>
         <ul className="flex justify-center lg:text-4xl font-extrabold text-customSteelblue divide-x divide-customSteelblue">
           <li className="px-4 h-20 flex items-center hover:text-sky-400 transition duration-200 cursor-pointer">
