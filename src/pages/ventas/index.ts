@@ -1,1 +1,1 @@
-export { default as Ventas } from './Ventas';
+export { default as VentasPage } from './Ventas';
