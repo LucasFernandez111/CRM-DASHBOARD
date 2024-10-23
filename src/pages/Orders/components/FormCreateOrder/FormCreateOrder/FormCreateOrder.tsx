@@ -156,6 +156,18 @@ const FormCreateOrder: React.FC<{}> = ({}) => {
           </section>
         ))}
 
+        <FormField
+          control={form.control}
+          name={`notes`}
+          render={({ field }) => (
+            <FormItem className="col-span-4">
+              <FormLabel>NOTAS</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Agrega una nota" {...field}></Textarea>
+              </FormControl>
+            </FormItem>
+          )}
+        />
         <Button
           className="col-span-2"
           type="button"
