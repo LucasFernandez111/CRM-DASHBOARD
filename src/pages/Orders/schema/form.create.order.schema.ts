@@ -37,6 +37,7 @@ export const createOrderSchema = z.object({
   items: z.array(itemSchema),
   paymentDetails: paymentDetailsSchema,
   orderStatus: z.nativeEnum(OrderStatus).default(OrderStatus.PENDIENTE),
+  notes: z.string().default(''),
 });
 
 export const defaultCreateOrderValues: CreateOrderType = {
@@ -63,6 +64,7 @@ export const defaultCreateOrderValues: CreateOrderType = {
     method: PaymentMethod.TRANSFERENCIA,
   },
   orderStatus: OrderStatus.PENDIENTE,
+  notes: '',
 };
 
 export type CreateOrderType = z.infer<typeof createOrderSchema>;
