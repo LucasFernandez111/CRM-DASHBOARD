@@ -8,6 +8,8 @@ const createOrder = (order: CreateOrder): Promise<Order> => instance.post(ENDPOI
 
 const getPDFOrders = (id: string) => (window.location.href = `${BASE_URL}/${ENDPOINTS.ORDERS_PDF}${id}`);
 
+const getOrdersStatisticsSales = () => instance.get(`${ENDPOINTS.ORDERS}/statistics/sales`);
+
 const deleteOrder = (id: string) => instance.delete(`${ENDPOINTS.ORDERS}/${id}`);
 
 const updateOrder = (id: string, order: any) => instance.put(`${ENDPOINTS.ORDERS}/${id}`, order);
@@ -18,6 +20,7 @@ const getOrdersForRange = (startDate: string, endDate: string): Promise<any> =>
 export const orders = {
   updateOrder,
   getOrders,
+  getOrdersStatisticsSales,
   getPDFOrders,
   deleteOrder,
   getOrdersForRange,
