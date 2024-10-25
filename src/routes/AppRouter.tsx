@@ -3,8 +3,9 @@ import { RouterLayout } from '../components/RouterLayout';
 import { HomePage } from '../pages/home';
 import { LoginPage } from '@/pages/login';
 
-import { OrdersPage } from '@/pages/Orders';
-import SalesPage from '@/pages/SalesPage/SalesPage';
+import { OrdersPage } from '@/pages/orders';
+import SalesPage from '@/pages/sales/SalesPage';
+import { MenuPage } from '@/pages/menu';
 
 export const AppRouter: React.FC<{}> = () => {
   return (
@@ -17,6 +18,8 @@ export const AppRouter: React.FC<{}> = () => {
         <Route path="/pedidos" element={<OrdersPage />} />
         //# Seccion donde estaran las estadisticas de ventas
         <Route path="/ventas" element={<SalesPage />} />
+        //# Seccion donde estara el menu con productos disponibles
+        <Route path="/menu" element={<MenuPage />} />
       </Route>
     </Routes>
   );
