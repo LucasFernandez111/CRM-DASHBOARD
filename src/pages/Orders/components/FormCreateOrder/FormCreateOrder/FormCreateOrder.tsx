@@ -7,7 +7,7 @@ import {
   CreateOrderType,
   createOrderSchema,
   defaultCreateOrderValues,
-} from '@/pages/Orders/schema/form.create.order.schema';
+} from '@/pages/orders/schema/form.create.order.schema';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { FormInputField } from '../../FormInputField';
 import { FormSelectField } from '../../FormSelectField';
@@ -28,7 +28,6 @@ const FormCreateOrder: React.FC<{}> = ({}) => {
   });
 
   const onSubmit = async (values: CreateOrderType) => {
-    // Cambia el tipo a CreateOrderSchema
     try {
       await orders.createOrder(values);
       alertSuccess('Orden creada correctamente');
