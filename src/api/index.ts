@@ -6,5 +6,5 @@ export * from './interfaces/categories.interface';
 export * from './interfaces/order.interface';
 export * from './interfaces/user.interface';
 export * from './orders';
-export * from './sheet.products';
+export * from './sheet-products';
 export * from './users';
