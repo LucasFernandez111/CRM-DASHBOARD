@@ -1,4 +1,4 @@
-import { PaymentMethod, OrderStatus, PaymentStatus } from '@/api';
+import { PaymentMethod, OrderStatus } from '@/api';
 import { z } from 'zod';
 
 const itemSchema = z.object({
