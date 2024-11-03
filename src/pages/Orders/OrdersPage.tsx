@@ -8,9 +8,11 @@ import { DateContext } from '@/context/DateContextProvider';
 import React, { useContext, useEffect, useState } from 'react';
 import { OrderCard } from './components/OrderCard';
 import { FormCreateOrder } from './components/FormCreateOrder/FormCreateOrder';
+import { IoIosAddCircle } from 'react-icons/io';
 
 const OrdersPage: React.FC<{}> = ({}) => {
   const { dateRange } = useContext(DateContext);
+
   const [allOrders, setAllOrders] = useState<AppState['order']>(null);
   const [error, setError] = useState<Boolean>(false);
   const [loading, setLoading] = useState<Boolean>(true);
@@ -20,11 +22,7 @@ const OrdersPage: React.FC<{}> = ({}) => {
   useEffect(() => {
     orders
       .getOrdersForRange(dateRange.startDate, dateRange.endDate)
-      .then((r) => {
-        console.log(r);
-
-        setAllOrders(r.data?.orders);
-      })
+      .then((r) => setAllOrders(r.data?.orders))
       .catch(() => setError(!error))
       .finally(() => setLoading(!loading));
   }, [dateRange]);
@@ -33,7 +31,21 @@ const OrdersPage: React.FC<{}> = ({}) => {
     <main className="xl:col-span-11 h-full max-h-screen overflow-auto bg-customSteelblue ">
       <div className="p-4 flex  gap-20 items-center justify-center  h-full">
         {showOrders(allOrders) ? (
-          allOrders!.map((order: Order) => <OrderCard key={order._id} {...order} />)
+          <>
+            {allOrders!.map((order: Order, i) => (
+              <OrderCard key={i} {...order} />
+            ))}
+
+            <DialogComp
+              title="CREAR PEDIDO"
+              description="Nuevo Pedido"
+              buttonTrigger={
+                <IoIosAddCircle size={120} className="hover:transition duration-300 ease-in-out" color="white" />
+              }
+            >
+              <FormCreateOrder />
+            </DialogComp>
+          </>
         ) : (
           <div className="flex flex-col  justify-center items-center gap-8">
             <GeneralMessage message="Todavia no hay pedidos" />
