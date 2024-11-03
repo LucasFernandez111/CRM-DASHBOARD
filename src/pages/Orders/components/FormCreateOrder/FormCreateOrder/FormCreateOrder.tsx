@@ -1,18 +1,18 @@
-import { orders, PaymentMethod, OrderStatus } from '@/api';
+import { orders, OrderStatus, PaymentMethod } from '@/api';
 import { Button } from '@/components/ui/button';
-import { FormField, FormItem, FormLabel, FormControl, Form } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
+import { useNotification } from '@/hooks';
 import { useCategories } from '@/hooks/use-categories';
 import {
-  CreateOrderType,
   createOrderSchema,
+  CreateOrderType,
   defaultCreateOrderValues,
 } from '@/pages/orders/schema/form.create.order.schema';
-import { useForm, useFieldArray } from 'react-hook-form';
-import { FormInputField } from '../../FormInputField';
-import { FormSelectField } from '../../FormSelectField';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNotification } from '@/hooks';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { FormInputField } from '../../../../../components/FormInputField';
+import { FormSelectField } from '../../../../../components/FormSelectField';
 
 const FormCreateOrder: React.FC<{}> = ({}) => {
   const form = useForm<CreateOrderType>({
@@ -131,7 +131,14 @@ const FormCreateOrder: React.FC<{}> = ({}) => {
             <FormField
               control={form.control}
               name={`items.${index}.quantity`}
-              render={({ field }) => <FormInputField placeholder="0" label="Cantidad" field={field} type="number" />}
+              render={({ field }) => (
+                <FormSelectField
+                  placeholder="0"
+                  label="CANTIDAD"
+                  field={field}
+                  options={Array.from({ length: 10 }, (_, i) => (i + 1).toString())} //Crea un Array con valores del 1 a 10
+                />
+              )}
             />
 
             <FormField
@@ -157,6 +164,7 @@ const FormCreateOrder: React.FC<{}> = ({}) => {
 
         <FormField
           control={form.control}
+          w
           name={`notes`}
           render={({ field }) => (
             <FormItem className="col-span-4">
