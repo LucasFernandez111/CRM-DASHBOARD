@@ -1,24 +1,38 @@
 'use client';
-import { OrderCustomer, OrderItem, orders } from '@/api';
+import { Order, orders } from '@/api';
+import { DialogComp } from '@/components/DialogComp';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { useNotification } from '@/hooks';
+import { FormCheckBoxStatusOrder } from '@/pages/panel/components/FormCheckBoxStatusOrder';
 import React from 'react';
+import { BiSolidShow } from 'react-icons/bi';
 import { IoPrintSharp } from 'react-icons/io5';
 import { LuCalendarClock } from 'react-icons/lu';
 import { MdDeleteForever } from 'react-icons/md';
+import { ShowFullOrder } from './components/ShowFullOrder';
 
-export type OrderCardProps = {
-  _id: string;
-  customer: OrderCustomer;
-  items: OrderItem[];
-  orderNumber: number;
-  totalAmount: number;
-};
+export interface OrderCardProps extends Order {}
 
-const OrderCard: React.FC<OrderCardProps> = ({ _id, customer, totalAmount = 0, items, orderNumber = 0 }) => {
+const OrderCard: React.FC<OrderCardProps> = ({
+  _id,
+  customer,
+  items,
+  orderStatus,
+  orderNumber,
+  totalAmount,
+  paymentDetails,
+  createdAt,
+}) => {
+  const { alertError } = useNotification();
+
+  const formatDate = (date: string) =>
+    new Date(date).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
   const handleClickPDF = async (_id: string) => {
     try {
       await orders.getPDFOrders(_id);
     } catch (error) {
-      console.log(error);
+      alertError('Error al generar el PDF');
     }
   };
 
@@ -27,60 +41,93 @@ const OrderCard: React.FC<OrderCardProps> = ({ _id, customer, totalAmount = 0, i
       await orders.deleteOrder(_id);
       window.location.reload();
     } catch (error) {
-      console.log(error);
+      alertError('Error al eliminar el pedido');
     }
   };
   return (
-    <article className="flex-none max-h-full w-80 transform flex flex-col rounded-3xl bg-white p-4 font-mono text-xl shadow-2xl transition duration-300 hover:scale-105">
-      <section className="flex flex-col w-full h-full items-center justify-between divide-y-2 divide-gray-800 divide-dashed">
-        <header className=" h-24 w-full flex justify-center items-center">
-          <div className="bg-sky-600 p-5 rounded-full">
-            <h1 className="text-center font-black text-3xl text-white">{orderNumber}#</h1>
-          </div>
+    <Card className="flex flex-col max-w-3xl p-4 space-y-4 ">
+      {/* Header */}
+      <CardHeader className="flex items-center justify-around flex-row">
+        {/* Círculo con Número */}
+        <div className="flex items-center justify-center bg-sky-600 size-20 text-2xl rounded-full">
+          <span className="text-white font-bold">#{orderNumber}</span>
+        </div>
 
-          <MdDeleteForever
-            size={50}
-            cursor="pointer"
-            className="absolute top-2 right-2"
-            onClick={() => handleClickDelete(_id)}
-          />
-        </header>
-        <div className="w-full flex gap-2 justify-center items-center py-2">
-          <LuCalendarClock size={30} />
-          <p>29/12/24</p>
+        {/* Fecha con Icono */}
+        <div className="flex items-center gap-2">
+          <LuCalendarClock className="text-sky-600" size={30} />
+          <time className="text-3xl font-bold">{formatDate(createdAt)}</time>
         </div>
-        {items.length != 0
-          ? items!.map((item: OrderItem) => (
+
+        {/* Icono de Eliminación */}
+        <MdDeleteForever size={60} color="black" onClick={() => handleClickDelete(_id)} />
+      </CardHeader>
+
+      {/* Content */}
+      <CardContent className=" flex flex-col space-y-5  uppercase   ">
+        <div className="text-center space-y-2  tracking-tight text-3xl">
+          <h1 className="font-bold ">{customer.name}</h1>
+          <h2 className="over font-extralight">RESUMEN DEL PEDIDO</h2>
+          <Separator className="bg-slate-600" />
+        </div>
+
+        <div className="flex items-center justify-around text-xl uppercase overflow-y-auto  space-x-5">
+          {/* Detalle del Pedido */}
+          <div className="text-right space-y-2  ">
+            {items.map((item) => (
               <>
-                <div className="flex w-full justify-between py-2">
-                  <p>CANT.</p>
-                  <p>DESC.</p>
-                  <p>PRECIO</p>
+                <div className="flex  gap-2 ">
+                  <h3>{item.quantity}X</h3>
+
+                  <h3>{item.category}</h3>
                 </div>
-                <div className="flex w-full justify-between py-2">
-                  <p>{item.quantity}x</p>
-                  <p>{item.description || ''}</p>
-                  <p>${item.price}</p>
-                </div>
+                <h3 className="text-start">{item.subcategory}</h3>
+                <Separator />
               </>
-            ))
-          : ''}
-        <div className="flex w-full justify-between py-2">
-          <p>TOTAL</p>
-          <p>${totalAmount}</p>
+            ))}
+          </div>
+          <Separator className="bg-slate-600" orientation="vertical" />
+
+          {/* Total y Método de Pago */}
+          <div className="space-y-1">
+            <h2 className="font-bold text-4xl">${totalAmount}</h2>
+            <h3 className="font-extralight text-xl text-sa">{paymentDetails.method}</h3>
+          </div>
         </div>
-        <footer className="flex w-full flex-col py-2">
-          <address className="flex flex-col space-y-1 not-italic">
-            <p>DIRECCION: {customer.address.street}</p>
-            <p>NUMERO: {customer.phone}</p>
-            <p>NOMBRE: {customer.name}</p>
-          </address>
-        </footer>
-        <div className="flex items-center justify-center mt-4 bg-gray-800 rounded-full w-16 h-16 divide-none hover:bg-gray-700">
-          <IoPrintSharp color="white" size={40} cursor="pointer" onClick={() => handleClickPDF(_id)} />
+
+        {/* Estado del Pedido */}
+        <div className=" text-2xl tracking-tight">
+          <FormCheckBoxStatusOrder orderStatus={orderStatus} _id={_id} />
         </div>
-      </section>
-    </article>
+      </CardContent>
+
+      {/* Footer */}
+      <CardFooter className="flex items-center justify-center space-x-10">
+        <DialogComp
+          title="DETALLES DEL PEDIDO"
+          description="Detalles del pedido"
+          buttonTrigger={
+            <div className="cursor-pointer shadow-xl bg-sky-600 flex items-center justify-center size-20 rounded-full hover:transition duration-300 ease-in-out">
+              <BiSolidShow size={35} color="white" />
+            </div>
+          }
+        >
+          <ShowFullOrder
+            customer={customer}
+            items={items}
+            orderNumber={orderNumber}
+            totalAmount={totalAmount}
+            paymentDetails={paymentDetails}
+          />
+        </DialogComp>
+        <div
+          className=" cursor-pointer shadow-xl bg-sky-600 flex items-center justify-center size-20 rounded-full transition duration-300 ease-in-out"
+          onClick={() => handleClickPDF(_id)}
+        >
+          <IoPrintSharp size={35} color="white" />
+        </div>
+      </CardFooter>
+    </Card>
   );
 };
 
