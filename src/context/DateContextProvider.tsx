@@ -1,6 +1,6 @@
 import React, { createContext, useState } from 'react';
 
-import { DateContextProviderProps, DateContextType, DateRangeFilter } from '../common/interfaces/date-context';
+import { DateContextProviderProps, DateContextType, DateRangeFilter } from './interfaces/date-context';
 import { format } from 'date-fns';
 
 export const DateContext = createContext<DateContextType>({} as DateContextType);
