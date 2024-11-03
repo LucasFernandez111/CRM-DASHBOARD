@@ -1,21 +1,23 @@
-import { BrowserRouter } from 'react-router-dom';
-import { Toaster } from 'sonner';
-import { DateContextProvider } from './context/DateContextProvider';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import { Toaster } from 'sonner';
 import { ApiProvider } from './context/ApiContext';
-import AuthProvider from './context/AuthContext';
+import { DateContextProvider } from './context/DateContextProvider';
+import store from './redux/store';
 import { AppRouter } from './routes/AppRouter';
 function App() {
   return (
     <DateContextProvider>
       <ApiProvider>
-        <AuthProvider>
-          <BrowserRouter>
+        <BrowserRouter>
+          <Provider store={store}>
             <Toaster position="top-right" richColors expand={false} />
+
             <AppRouter />
-          </BrowserRouter>
-        </AuthProvider>
+          </Provider>
+        </BrowserRouter>
       </ApiProvider>
     </DateContextProvider>
   );
