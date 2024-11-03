@@ -1,27 +1,61 @@
-import { orders } from '@/api';
-import { Statistics, StatisticsCurrentSales } from '@/api/interfaces/statistics.interface';
+import { StatisticsSales } from '@/api/interfaces/statistics.interface';
+import { StatisticsTopOrder } from '@/api/interfaces/top-order.interface';
+import { statistics } from '@/api/statistics';
 import { useEffect, useState } from 'react';
+import { useNotification } from '../notification';
 
 export const useStatistics = () => {
-  const [statisticsGeneral, setStatistics] = useState<Statistics | null>(null);
-
-  const [statisticsCurrentSales, setStatisticsCurrentSales] = useState<StatisticsCurrentSales>({
-    day: 0,
-    week: 0,
-    month: 0,
-    year: 0,
+  const { alertError } = useNotification();
+  const [statisticsGeneral, setStatisticsGeneral] = useState<StatisticsSales>({
+    total: 0,
+    current: {
+      day: 0,
+      week: 0,
+      month: 0,
+      year: 0,
+    },
+    periodSales: {
+      salesMonth: [],
+      salesWeek: '',
+      salesDay: '',
+      salesYear: '',
+    },
   });
-  const [statisticsTotalSales, setTotalSales] = useState<number>(0);
-  const [error, setError] = useState<Boolean>(false);
+
+  const [statisticsTopOrder, setStatisticsTopOrder] = useState<StatisticsTopOrder>({
+    today: {
+      totalAmount: 0,
+      count: 0,
+      category: '',
+      subcategory: '',
+    },
+    period: {
+      totalAmount: 0,
+      count: 0,
+      category: '',
+      subcategory: '',
+    },
+  });
+
   useEffect(() => {
-    orders
+    statistics
       .getOrdersStatisticsSales()
-      .then((r) => {
-        setStatistics(r.data);
-        setStatisticsCurrentSales(r.data.sales.current);
-        setTotalSales(r.data.sales.total);
+      .then(({ data }) => {
+        setStatisticsGeneral(data.sales);
       })
-      .catch(() => setError(!error));
+      .catch(() => {
+        alertError('Error al cargar las estadísticas');
+      });
+
+    statistics
+      .getStatisticsTopOrder()
+      .then((res) => {
+        setStatisticsTopOrder(res.data.topOrder);
+      })
+      .catch(() => alertError('Error al cargar las estadísticas'));
   }, []);
-  return { statisticsGeneral, statisticsCurrentSales, statisticsTotalSales, error };
+  return {
+    statisticsTopOrder,
+    statisticsGeneral,
+  };
 };
