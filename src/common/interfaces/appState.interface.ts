@@ -5,6 +5,6 @@ export default interface AppState {
   user: User | null;
 
   dateRange: Range[];
-  order: Order[] | null;
+  order: Order[];
   createOrder: CreateOrder;
 }
