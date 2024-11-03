@@ -1,21 +1,17 @@
-export interface Statistics {
-  sales: StatisticsSales;
-}
-
 export interface StatisticsSales {
   total: number;
-  current: StatisticsCurrentSales;
-  periodSales: StatisticsPeriodSales;
+  current: StatisticsSalesCurrent;
+  periodSales: StatisticsSalesPeriod;
 }
 
-export interface StatisticsCurrentSales {
+export interface StatisticsSalesCurrent {
   day: number;
   week: number;
   month: number;
   year: number;
 }
 
-export interface StatisticsPeriodSales {
+export interface StatisticsSalesPeriod {
   salesMonth: StatisticsSalesMonth[];
   salesWeek: string;
   salesDay: string;
