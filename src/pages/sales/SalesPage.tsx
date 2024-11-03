@@ -7,7 +7,7 @@ import { useStatistics } from '@/hooks/statistics';
 
 const SalesPage = () => {
   const [nextStatistics, setNextStatistics] = useState<Boolean>(false);
-  const { statisticsGeneral, statisticsCurrentSales, statisticsTotalSales } = useStatistics();
+  const { statisticsTopOrder, statisticsGeneral } = useStatistics();
 
   const [chartData, setChartData] = useState<ChartSalesData[]>([
     { month: 'ENERO', sales: 0 },
@@ -28,7 +28,7 @@ const SalesPage = () => {
     if (statisticsGeneral) {
       const updatedChartData = chartData.map((data, i) => ({
         ...data,
-        sales: statisticsGeneral.sales.periodSales.salesMonth[i]?.total || 0,
+        sales: statisticsGeneral.periodSales.salesMonth[i]?.total || 0,
       }));
 
       setChartData(updatedChartData);
@@ -45,17 +45,23 @@ const SalesPage = () => {
       <section className="row-span-4 grid grid-cols-2 justify-center items-center gap-2 p-32">
         {nextStatistics ? (
           <>
-            <CardWithStatistics description="VENTAS X DÍA" amount={statisticsCurrentSales.day} />
-            <CardWithStatistics description="VENTAS SEMANALES" amount={statisticsCurrentSales.week} />
-            <CardWithStatistics description="VENTAS X MES" amount={statisticsCurrentSales.month} />
-            <CardWithStatistics description="VENTAS X AÑO" amount={statisticsCurrentSales.year} />
+            <CardWithStatistics description="VENTAS X DÍA" title={`$${statisticsGeneral.current.day}`} />
+            <CardWithStatistics description="VENTAS SEMANALES" title={`$${statisticsGeneral.current.week}`} />
+            <CardWithStatistics description="VENTAS X MES" title={`$${statisticsGeneral.current.month}`} />
+            <CardWithStatistics description="VENTAS X AÑO" title={`$${statisticsGeneral.current.year}`} />
           </>
         ) : (
           <>
-            <CardWithStatistics description="VENTAS TOTAL" amount={statisticsTotalSales} />
-            <CardWithStatistics description="PEDIDOS DIARIOS PRODUCTO TOP" amount="$200" />
-            <CardWithStatistics description="PRECIO PEDIDO MAS VENDIDO" amount="$200" />
-            <CardWithStatistics description="PEDIDO MAS COMPRADO " amount="$200" />
+            <CardWithStatistics description="VENTAS TOTAL" title={`$${statisticsGeneral.total}`} />
+            <CardWithStatistics description="PEDIDOS DIARIOS PRODUCTO TOP" title={statisticsTopOrder.period.count} />
+            <CardWithStatistics
+              description="PEDIDO MAS COMPRADO"
+              title={statisticsTopOrder.period.category + ' - ' + statisticsTopOrder.period.subcategory}
+            />
+            <CardWithStatistics
+              description="PRECIO PEDIDO MAS VENDIDO "
+              title={statisticsTopOrder.period.totalAmount}
+            />
           </>
         )}
       </section>
