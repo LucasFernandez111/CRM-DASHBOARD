@@ -24,18 +24,16 @@ export interface Order {
   totalAmount: number;
   orderStatus: OrderStatus;
   _id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  __v: number;
+  createdAt: string;
 }
 
 export interface OrderCustomer {
   name: string;
   phone: string;
-  address: OrderAdress;
+  address: OrderAddress;
 }
 
-export interface OrderAdress {
+export interface OrderAddress {
   street: string;
   city: string;
   postalCode: string;
@@ -58,3 +56,5 @@ export interface OrderPaymentDetails {
 
 export interface CreateOrder
   extends Omit<Order, '_id' | 'createdAt' | 'updatedAt' | '__v' | 'userId' | 'orderNumber' | 'totalAmount'> {}
+
+export interface UpdateOrder extends Partial<Order> {}
