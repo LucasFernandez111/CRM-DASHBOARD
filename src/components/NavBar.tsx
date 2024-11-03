@@ -1,7 +1,22 @@
+import { auth } from '@/api/auth';
 import { LOGO_WB } from '@/assets';
+import { useNotification } from '@/hooks';
+import { resetUser } from '@/redux/states';
+
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 export default function NavBar() {
+  const distpatch = useDispatch();
+  const { alertError } = useNotification();
+  const logOut = async () => {
+    try {
+      distpatch(resetUser());
+      await auth.logOut();
+    } catch (err) {
+      alertError('Error al cerrar sesion');
+    }
+  };
   return (
     <nav className="col-span-full  p-4">
       <div className="flex justify-around">
@@ -19,7 +34,10 @@ export default function NavBar() {
             EXPORTAR
           </li>
         </ul>
-        <button className="bg-customSteelblue text-white rounded-3xl px-6 py-2 text-2xl font-extrabold transition duration-300 hover:bg-sky-400">
+        <button
+          className="bg-customSteelblue text-white rounded-3xl px-6 py-2 text-2xl font-extrabold transition duration-300 hover:bg-sky-400"
+          onClick={logOut}
+        >
           SALIR
         </button>
       </div>
