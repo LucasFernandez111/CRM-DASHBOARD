@@ -6,7 +6,7 @@ import { SheetData } from './components/data-table/DataTable/columns';
 import { structureProductsData } from './utils';
 
 export const MenuPage = () => {
-  const { products, error } = useProducts();
+  const { products } = useProducts();
   const { alertError, alertInfo } = useNotification();
   const [productsData, setProductsData] = useState<SheetData[]>([
     {
@@ -18,11 +18,11 @@ export const MenuPage = () => {
   ]);
 
   useEffect(() => {
-    if (!products && error) alertError('Error al cargar los productos');
+    if (!products) alertError('Error al cargar los productos');
     if (products.length < 0) alertInfo('No hay productos');
 
     setProductsData(structureProductsData(products));
-  }, [products, error]);
+  }, [products]);
 
   return (
     <main className=" col-span-11   h-full max-h-screen overflow-auto bg-customSteelblue p-4">
