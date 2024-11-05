@@ -2,17 +2,18 @@ import { auth } from '@/api/auth';
 import { LOGO_WB } from '@/assets';
 import { useNotification } from '@/hooks';
 import { resetUser } from '@/redux/states';
-
-import { useDispatch } from 'react-redux';
+import { AppStore } from '@/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 export default function NavBar() {
   const distpatch = useDispatch();
+  const userState = useSelector((state: AppStore) => state.user);
   const { alertError } = useNotification();
   const logOut = async () => {
     try {
-      distpatch(resetUser());
       await auth.logOut();
+      distpatch(resetUser());
     } catch (err) {
       alertError('Error al cerrar sesion');
     }
@@ -24,8 +25,8 @@ export default function NavBar() {
           <img src={LOGO_WB} alt="Logo Company" className=" object-cover size-20" />
         </div>
         <ul className="flex justify-center lg:text-4xl font-extrabold text-customSteelblue divide-x divide-customSteelblue">
-          <li className="px-4 h-20 flex items-center hover:text-sky-400 transition duration-200 cursor-pointer">
-            COMPANIA
+          <li className="px-4 h-20 flex items-center hover:text-sky-400 transition duration-200 cursor-pointer uppercase">
+            {userState.company ?? 'COMPANIA'}
           </li>
           <li className="px-4 h-20 flex items-center hover:text-sky-400 transition duration-200 cursor-pointer">
             <Link to="/panel">PANEL ADMINISTRADOR</Link>
