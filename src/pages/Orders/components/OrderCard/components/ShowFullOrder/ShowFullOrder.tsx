@@ -1,8 +1,8 @@
 'use client';
 import { OrderCustomer, OrderItem, OrderPaymentDetails } from '@/api';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Separator } from '@radix-ui/react-select';
+import { Separator } from '@/components/ui/separator';
 import React from 'react';
+import { IoPrintSharp } from 'react-icons/io5';
 
 export interface ShowFullOrderProps {
   customer: OrderCustomer;
@@ -10,60 +10,64 @@ export interface ShowFullOrderProps {
   orderNumber: number;
   totalAmount: number;
   paymentDetails: OrderPaymentDetails;
+  onPrint: () => void;
 }
 
-const ShowFullOrder: React.FC<ShowFullOrderProps> = ({ customer, items, orderNumber, totalAmount, paymentDetails }) => {
+const ShowFullOrder: React.FC<ShowFullOrderProps> = ({
+  onPrint,
+  customer,
+  items,
+  orderNumber,
+  totalAmount,
+  paymentDetails,
+}) => {
   return (
-    <main className="grid grid-cols-1 gap-6 p-6">
-      <Card className="shadow-md">
-        <CardHeader>
-          <CardTitle>Cliente</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-gray-700">{customer.name}</p>
-          <p className="text-sm text-gray-700">{customer.phone}</p>
-        </CardContent>
-      </Card>
+    <main className="flex flex-col space-y-9  items-center  ">
+      {/* Informacion del cliente */}
+      <section className="flex items-center flex-col font-semibold text-3xl  space-y-2">
+        <h1>{customer.name}</h1>
+        <h2>{customer.phone}</h2>
+        <h2>
+          {customer.address.street} - {customer.address.postalCode}{' '}
+        </h2>
+        <h1>Numero de PEDIDO # {orderNumber}</h1>
+      </section>
 
-      <Card className="shadow-md">
-        <CardHeader>
-          <CardTitle>Pedido</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-gray-700">Número: {orderNumber}</p>
-          <p className="text-sm text-gray-700">Total: ${totalAmount}</p>
-          <h3 className="text-base font-medium mt-4">Detalles de artículos</h3>
-          <Separator className="my-2" />
-          {items.map((item, index) => (
-            <div key={index} className="py-2">
-              <p className="text-sm text-gray-700">{item.description}</p>
-              <p className="text-sm text-gray-700">Cantidad: {item.quantity}</p>
-              <p className="text-sm text-gray-700">Precio: ${item.price}</p>
-              <Separator className="my-2" />
-            </div>
-          ))}
-        </CardContent>
-      </Card>
+      <Separator />
+      {/* Pedidos  */}
+      <section className="text-xl font-normal space-y-10">
+        {items.map((item, i) => (
+          <div key={i} className="grid grid-cols-3 ">
+            <h1>
+              {item.quantity} X {item.category} {item.subcategory}
+            </h1>
 
-      <Card className="shadow-md">
-        <CardHeader>
-          <CardTitle>Pago</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-gray-700">Método: {paymentDetails.method}</p>
-        </CardContent>
-      </Card>
+            <p className="line-clamp-2 text-wrap"> {item.description}</p>
 
-      <Card className="shadow-md">
-        <CardHeader>
-          <CardTitle>Ubicación</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-gray-700">
-            {customer.address.city}, {customer.address.postalCode}, {customer.address.country}
-          </p>
-        </CardContent>
-      </Card>
+            <h2>${item.price}</h2>
+          </div>
+        ))}
+      </section>
+      <Separator />
+      <section className="flex   w-full  justify-between p-6 text-3xl ">
+        <div
+          className=" cursor-pointer shadow-xl bg-sky-600 flex items-center justify-center size-20 rounded-full transition duration-300 ease-in-out"
+          onClick={onPrint}
+        >
+          <IoPrintSharp size={40} color="white" />
+        </div>
+        <div className="flex flex-col">
+          <h1 className="font-semibold">TOTAL ${totalAmount}</h1>
+          <p className="font-extralight">{paymentDetails.method}</p>
+        </div>
+      </section>
+
+      <footer className="flex flex-col items-center justify-center space-x-5 font-extralight text-2xl">
+        <h1>Muchas gracias, esperamos que disfruten de su comida.</h1>
+        <h2>Bon appétit ;D</h2>
+
+        <h1 className="mt-16 text-xl">SISTEMA REALIZADO POR OKEYCORP.COM</h1>
+      </footer>
     </main>
   );
 };
