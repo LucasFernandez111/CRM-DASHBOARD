@@ -1,16 +1,21 @@
 import { sheetProducts } from '@/api';
+import { AppStore } from '@/redux/store';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useNotification } from '../notification';
 
 export const useProducts = () => {
+  const userState = useSelector((state: AppStore) => state.user);
+  const { alertError } = useNotification();
   const [products, setProducts] = useState([]);
-  const [error, setError] = useState(false);
+
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     sheetProducts
-      .getSheetProducts()
+      .getSheetProducts(userState.sheetId)
       .then((r) => setProducts(r.data?.products))
-      .catch(() => setError(!error))
+      .catch((err) => alertError(err.message))
       .finally(() => setLoading(!loading));
   }, []);
-  return { products, error, loading };
+  return { products, loading };
 };
