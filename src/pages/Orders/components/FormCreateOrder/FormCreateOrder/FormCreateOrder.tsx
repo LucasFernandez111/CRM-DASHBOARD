@@ -32,6 +32,7 @@ const FormCreateOrder: React.FC<{}> = ({}) => {
       await orders.createOrder(values);
       alertSuccess('Orden creada correctamente');
       form.reset(defaultCreateOrderValues);
+      window.location.reload();
     } catch (error) {
       alertError('Error al crear la orden');
     }
@@ -164,7 +165,6 @@ const FormCreateOrder: React.FC<{}> = ({}) => {
 
         <FormField
           control={form.control}
-          w
           name={`notes`}
           render={({ field }) => (
             <FormItem className="col-span-4">
