@@ -36,7 +36,9 @@ const FormUpdateUser: React.FC<{}> = ({}) => {
     const updatedUser = Object.fromEntries(Object.entries(user).filter(([_, value]) => value !== ''));
 
     try {
-      await users.updateUser(updatedUser as UserUpdateType);
+      const result = await users.updateUser(updatedUser as UserUpdateType);
+      console.log(result);
+
       dispatch(modifyUser(updatedUser as UserUpdateType));
       alertSuccess('Usuario actualizado exitosamente');
     } catch (error) {
