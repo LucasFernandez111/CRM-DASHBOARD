@@ -8,7 +8,6 @@ import { AppStore } from '@/redux/store';
 
 const PanelPage = () => {
   const userState = useSelector((state: AppStore) => state.user);
-  console.log(userState);
 
   return (
     <main className="col-span-11 grid grid-cols-4 h-full max-h-screen overflow-auto bg-customSteelblue p-7 gap-4">
