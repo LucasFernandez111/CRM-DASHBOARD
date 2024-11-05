@@ -1,3 +1,4 @@
+import { DialogComp } from '@/components/DialogComp';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -13,6 +14,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { useState } from 'react';
+import { FormUpdateRows } from '../../FormUpdateRows';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -40,6 +42,7 @@ const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValu
       rowSelection,
     },
   });
+
   return (
     <div className="rounded-md border ">
       {/* FILTRADO DE DATOS */}
@@ -99,9 +102,25 @@ const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValu
           Next
         </Button>
       </div>
-      <div className="flex-1 text-md font-semibold text-muted-foreground p-2 ">
-        {table.getFilteredSelectedRowModel().rows.length} de {table.getFilteredRowModel().rows.length} filas
-        seleccionadas
+      <div className="flex-1 flex-row flex justify-between  text-md font-semibold text-muted-foreground p-2 ">
+        <p>
+          {table.getFilteredSelectedRowModel().rows.length} de {table.getFilteredRowModel().rows.length} filas
+          seleccionadas
+        </p>
+
+        {table.getFilteredSelectedRowModel().rows.length > 0 && (
+          <DialogComp
+            buttonTrigger={
+              <Button variant="default" size="sm">
+                Actualizar filas
+              </Button>
+            }
+            description="Actualiza las filas seleccionadas de la tabla."
+            title="¿Deseas actualizar las filas seleccionadas?"
+          >
+            <FormUpdateRows />
+          </DialogComp>
+        )}
       </div>
     </div>
   );
