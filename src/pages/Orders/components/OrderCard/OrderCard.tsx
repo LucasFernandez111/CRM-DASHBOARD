@@ -81,7 +81,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
 
                   <h3>{item.category}</h3>
                 </div>
-                <h3 className="text-start">{item.subcategory}</h3>
+                <h3 className="text-start line-clamp-1">{item.subcategory}</h3>
                 <Separator />
               </>
             ))}
@@ -118,6 +118,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
             orderNumber={orderNumber}
             totalAmount={totalAmount}
             paymentDetails={paymentDetails}
+            onPrint={() => handleClickPDF(_id)}
           />
         </DialogComp>
         <div
