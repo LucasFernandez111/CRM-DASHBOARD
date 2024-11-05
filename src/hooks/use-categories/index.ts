@@ -1,27 +1,31 @@
 import { sheetProducts } from '@/api';
+import { AppStore } from '@/redux/store';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useNotification } from '../notification';
 
 export const useCategories = () => {
+  const userState = useSelector((state: AppStore) => state.user);
+  const { alertError } = useNotification();
   const [categories, setCategories] = useState<string[]>([]);
   const [subcategories, setSubcategories] = useState<string[]>([]);
-  const [error, setError] = useState<Boolean>(false);
   const [loading, setLoading] = useState<Boolean>(true);
 
   useEffect(() => {
     sheetProducts
-      .getSheetCategories()
+      .getSheetCategories(userState.sheetId)
       .then((r) => {
         setCategories(r.data?.categories);
         setSubcategories(r.data?.subcategories);
       })
-      .catch(() => setError(!error))
+      .catch(() => alertError('Error al cargar las categorias'))
       .finally(() => setLoading(!loading));
   }, []);
 
   return {
     categories,
     subcategories,
-    error,
+
     loading,
   };
 };
