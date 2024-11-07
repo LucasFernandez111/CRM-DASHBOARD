@@ -18,8 +18,6 @@ const itemSchema = z.object({
 const addressSchema = z.object({
   street: z.string().default(''),
   city: z.string().default(''),
-  postalCode: z.string().default(''),
-  country: z.string().default(''),
 });
 
 const customerSchema = z.object({
@@ -47,8 +45,6 @@ export const defaultCreateOrderValues: CreateOrderType = {
     address: {
       street: '',
       city: '',
-      postalCode: '',
-      country: '',
     },
   },
   items: [
