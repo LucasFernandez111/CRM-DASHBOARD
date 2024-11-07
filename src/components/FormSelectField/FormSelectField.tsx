@@ -5,16 +5,16 @@ import React from 'react';
 export type FormSelectFieldProps = {
   label: string;
   field: any;
-  placeholder: string;
+  placeholder?: string;
   disable?: boolean;
-  options: string[]; // Mejora con objeto clave-valor para más flexibilidad
-  className?: string; // Nueva prop para la clase
+  options: string[];
+  className?: string;
 };
 
 const FormSelectField: React.FC<FormSelectFieldProps> = ({
   label,
   field,
-  placeholder,
+  placeholder = '',
   options,
   disable,
   className,
