@@ -9,22 +9,21 @@ import {
 
 interface Props {
   children: React.ReactNode;
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   buttonTrigger: React.ReactNode;
 }
 
-export const DialogComp: React.FC<Props> = ({ title, description, children, buttonTrigger }) => {
+export const DialogComp: React.FC<Props> = ({ title = '', description = '', children, buttonTrigger }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>{buttonTrigger}</DialogTrigger>
 
-      <DialogContent className="sm:max-w-[425px] lg:max-w-4xl">
+      <DialogContent className="sm:max-w-[425px] lg:max-w-[700px] xl:max-w-[900px]">
         <DialogHeader>
           <DialogTitle className="font-bold text-3xl">{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-
         {children}
       </DialogContent>
     </Dialog>
