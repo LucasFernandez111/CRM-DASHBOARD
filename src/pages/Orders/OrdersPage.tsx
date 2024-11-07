@@ -1,61 +1,68 @@
 'use client';
-import { orders, Order } from '@/api';
-import AppState from '@/common/interfaces/appState.interface';
+import { Order, OrderStatus } from '@/api';
 import { DialogComp } from '@/components/DialogComp';
 import { GeneralMessage } from '@/components/GeneralMessage';
 import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DateContext } from '@/context/DateContextProvider';
+import useOrderForRange from '@/hooks/orders/useOrderForRange';
 import React, { useContext, useEffect, useState } from 'react';
-import { OrderCard } from './components/OrderCard';
-import { FormCreateOrder } from './components/FormCreateOrder/FormCreateOrder';
 import { IoIosAddCircle } from 'react-icons/io';
+import { CauroselOrders } from './components/CarouselOrders';
+import { FormCreateOrder } from './components/FormCreateOrder/FormCreateOrder';
+import { filterOrdersForStatus } from './services/filters';
 
 const OrdersPage: React.FC<{}> = ({}) => {
   const { dateRange } = useContext(DateContext);
-
-  const [allOrders, setAllOrders] = useState<AppState['order']>(null);
-  const [error, setError] = useState<Boolean>(false);
-  const [loading, setLoading] = useState<Boolean>(true);
-
-  const showOrders = (allOrders: AppState['order']): Boolean => Boolean(allOrders && allOrders.length > 0);
+  const { orders, handleRefresh } = useOrderForRange(dateRange);
+  const [ordersFiltered, setOrdersFiltered] = useState<Order[]>(orders);
 
   useEffect(() => {
-    orders
-      .getOrdersForRange(dateRange.startDate, dateRange.endDate)
-      .then((r) => setAllOrders(r.data?.orders))
-      .catch(() => setError(!error))
-      .finally(() => setLoading(!loading));
-  }, [dateRange]);
+    setOrdersFiltered(orders);
+  }, [orders]);
 
   return (
-    <main className="xl:col-span-11 h-full max-h-screen overflow-auto bg-customSteelblue ">
-      <div className="p-4 flex  gap-20 items-center justify-center  h-full">
-        {showOrders(allOrders) ? (
-          <>
-            {allOrders!.map((order: Order, i) => (
-              <OrderCard key={i} {...order} />
-            ))}
-
-            <DialogComp
-              title="CREAR PEDIDO"
-              description="Nuevo Pedido"
-              buttonTrigger={
-                <IoIosAddCircle size={120} className="hover:transition duration-300 ease-in-out" color="white" />
-              }
-            >
-              <FormCreateOrder />
-            </DialogComp>
-          </>
-        ) : (
-          <div className="flex flex-col  justify-center items-center gap-8">
-            <GeneralMessage message="Todavia no hay pedidos" />
-
-            <DialogComp title="CREAR PEDIDO" description="Nuevo Pedido" buttonTrigger={<Button>Crear pedido</Button>}>
-              <FormCreateOrder />
+    <main className="xl:col-span-11 h-full max-h-screen overflow-hidden bg-customSteelblue   items-center justify-center flex">
+      {orders.length > 0 ? (
+        <div className="flex items-end flex-col gap-3 ">
+          <div className="flex items-center justify-between w-full">
+            <Select onValueChange={(status) => setOrdersFiltered(filterOrdersForStatus(orders, status))}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="FILTRAR ESTADO" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {Object.values(OrderStatus).map((status) => (
+                    <SelectItem key={status} value={status}>
+                      {status}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <DialogComp buttonTrigger={<Button variant="outline">CREAR PEDIDO</Button>}>
+              <FormCreateOrder onRefresh={handleRefresh} />
             </DialogComp>
           </div>
-        )}
-      </div>
+
+          <CauroselOrders orders={ordersFiltered} />
+        </div>
+      ) : (
+        <section className="flex flex-col items-center space-y-3">
+          <GeneralMessage message="Todavia no hay pedidos" />
+          <DialogComp
+            buttonTrigger={
+              <IoIosAddCircle
+                size={120}
+                className="transition ease-in-out  cursor-pointer hover:-translate-y-1 hover:scale-110 duration-150"
+                color="white"
+              />
+            }
+          >
+            <FormCreateOrder onRefresh={handleRefresh} />
+          </DialogComp>
+        </section>
+      )}
     </main>
   );
 };
