@@ -9,11 +9,11 @@ import { orders, OrderStatus } from '@/api';
 import { useNotification } from '@/hooks';
 
 export type FormCheckBoxStatusOrderProps = {
-  _id: string;
+  id: string;
   orderStatus: OrderStatus;
 };
 
-const FormCheckBoxStatusOrder: React.FC<FormCheckBoxStatusOrderProps> = ({ orderStatus, _id }) => {
+const FormCheckBoxStatusOrder: React.FC<FormCheckBoxStatusOrderProps> = ({ orderStatus, id }) => {
   const { alertSuccess, alertError } = useNotification();
   const form = useForm<FormStatusOrderType>({
     resolver: zodResolver(FormStatusOrderSchema),
@@ -24,7 +24,7 @@ const FormCheckBoxStatusOrder: React.FC<FormCheckBoxStatusOrderProps> = ({ order
 
   const onSubmit = async (data: FormStatusOrderType) => {
     try {
-      await orders.updateOrder(_id, data);
+      await orders.updateOrder(id, data);
 
       alertSuccess('Orden actualizada exitosamente');
       window.location.reload();
@@ -40,16 +40,16 @@ const FormCheckBoxStatusOrder: React.FC<FormCheckBoxStatusOrderProps> = ({ order
           control={form.control}
           name="orderStatus"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-center space-x-4 ">
+            <FormItem className="flex  flex-row items-center justify-center space-x-4 ">
               <FormControl className="">
                 <Checkbox
-                  className="size-10"
+                  className="size-9"
                   type="submit"
                   checked={field.value === OrderStatus.ENTREGADO}
                   onCheckedChange={(checked) => field.onChange(checked ? OrderStatus.ENTREGADO : OrderStatus.PENDIENTE)}
                 />
               </FormControl>
-              <FormLabel className="text-2xl font-bold">{orderStatus}</FormLabel>
+              <FormLabel className="text-2xl font-semibold antialiased">{orderStatus}</FormLabel>
             </FormItem>
           )}
         />
