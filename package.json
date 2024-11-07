@@ -24,7 +24,7 @@
     "axios": "^1.7.4",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "embla-carousel-react": "^8.3.0",
+    "embla-carousel-react": "^8.3.1",
     "heroicons": "^2.1.5",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.452.0",
