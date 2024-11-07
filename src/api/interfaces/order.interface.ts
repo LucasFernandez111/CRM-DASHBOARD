@@ -36,8 +36,6 @@ export interface OrderCustomer {
 export interface OrderAddress {
   street: string;
   city: string;
-  postalCode: string;
-  country?: string;
 }
 
 export interface OrderItem {
