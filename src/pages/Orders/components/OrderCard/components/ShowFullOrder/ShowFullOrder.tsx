@@ -1,5 +1,7 @@
 'use client';
 import { OrderCustomer, OrderItem, OrderPaymentDetails } from '@/api';
+import { DialogComp } from '@/components/DialogComp';
+import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import React from 'react';
 import { IoPrintSharp } from 'react-icons/io5';
@@ -22,53 +24,63 @@ const ShowFullOrder: React.FC<ShowFullOrderProps> = ({
   paymentDetails,
 }) => {
   return (
-    <main className="flex flex-col space-y-9  items-center  ">
-      {/* Informacion del cliente */}
-      <section className="flex items-center flex-col font-semibold text-3xl  space-y-2">
+    <div className="flex flex-col space-y-10 ">
+      <header className="flex flex-col items-center text-3xl font-semibold space-y-3">
         <h1>{customer.name}</h1>
         <h2>{customer.phone}</h2>
         <h2>
-          {customer.address.street} - {customer.address.postalCode}{' '}
+          {customer.address.city} - {customer.address.street}
         </h2>
-        <h1>Numero de PEDIDO # {orderNumber}</h1>
+        <h2>
+          NUMERO DE PEDIDO <span className="text-blue-500 font-bold">#{orderNumber}</span>
+        </h2>
+      </header>
+
+      <section className="p-5 space-y-10">
+        <div className="flex flex-col space-y-3  overflow-auto">
+          {items.map((item: OrderItem) => (
+            <>
+              <Separator className="bg-slate-600 bg-opacity-35" />
+              <article className="flex justify-around items-center text-2xl font-normal">
+                <div className="w-2/6">
+                  <p>
+                    {item.quantity} X {item.category}
+                  </p>
+                  <p>{item.subcategory}</p>
+                </div>
+                <DialogComp title="DESCRIPCION DEL PRODUCTO" buttonTrigger={<Button>ver descripcion</Button>}>
+                  <p className="text-center text-3xl text-wrap">{item.description}</p>
+                </DialogComp>
+                <p>${item.price}</p>
+              </article>
+              <Separator className="bg-slate-600 bg-opacity-35" />
+            </>
+          ))}
+        </div>
+        <div className="flex flex-col  items-end  font-bold text-3xl mt-8">
+          <h1>TOTAL: ${totalAmount}</h1>
+          <h1>{paymentDetails.method}</h1>
+        </div>
+
+        <div className="flex flex-col text-center text-2xl font-extralight  ">
+          <p>Muchas gracias, esperamos que disfruten de su comida.</p>
+          <p>Bon appétit ;D</p>
+        </div>
       </section>
 
-      <Separator />
-      {/* Pedidos  */}
-      <section className="text-xl font-normal space-y-10">
-        {items.map((item, i) => (
-          <div key={i} className="grid grid-cols-3 ">
-            <h1>
-              {item.quantity} X {item.category} {item.subcategory}
-            </h1>
-
-            <p className="line-clamp-2 text-wrap"> {item.description}</p>
-
-            <h2>${item.price}</h2>
-          </div>
-        ))}
-      </section>
-      <Separator />
-      <section className="flex   w-full  justify-between p-6 text-3xl ">
+      <figure className="flex justify-center items-center">
         <div
-          className=" cursor-pointer shadow-xl bg-sky-600 flex items-center justify-center size-20 rounded-full transition duration-300 ease-in-out"
           onClick={onPrint}
+          className="flex items-center text-white justify-center bg-sky-600 size-20 transition ease-in-out  cursor-pointer hover:-translate-y-1 hover:scale-110 duration-150    rounded-full"
         >
-          <IoPrintSharp size={40} color="white" />
+          <IoPrintSharp size={40} />
         </div>
-        <div className="flex flex-col">
-          <h1 className="font-semibold">TOTAL ${totalAmount}</h1>
-          <p className="font-extralight">{paymentDetails.method}</p>
-        </div>
-      </section>
+      </figure>
 
-      <footer className="flex flex-col items-center justify-center space-x-5 font-extralight text-2xl">
-        <h1>Muchas gracias, esperamos que disfruten de su comida.</h1>
-        <h2>Bon appétit ;D</h2>
-
-        <h1 className="mt-16 text-xl">SISTEMA REALIZADO POR OKEYCORP.COM</h1>
+      <footer className="text-center text-xl font-extralight">
+        <h1>SISTEMA REALIZADO POR OKEYCORP.COM</h1>
       </footer>
-    </main>
+    </div>
   );
 };
 
