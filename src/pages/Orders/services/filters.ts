@@ -1,6 +1,8 @@
 import { Order } from '@/api';
 
-const filterOrdersForStatus = (orders: Order[], status: string): Order[] =>
-  orders.filter((order: Order) => order.orderStatus === status);
+type FilterKey = keyof Order;
 
-export { filterOrdersForStatus };
+const filterOrders = (orders: Order[], filterKey: FilterKey, filterValue: string | number): Order[] => {
+  return orders.filter((order: Order) => order[filterKey] === filterValue);
+};
+export { filterOrders };
