@@ -1,16 +1,17 @@
 'use client';
-import { Order, OrderStatus } from '@/api';
+import { Order } from '@/api';
 import { DialogComp } from '@/components/DialogComp';
 import { GeneralMessage } from '@/components/GeneralMessage';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 import { DateContext } from '@/context/DateContextProvider';
 import useOrderForRange from '@/hooks/orders/useOrderForRange';
 import React, { useContext, useEffect, useState } from 'react';
 import { IoIosAddCircle } from 'react-icons/io';
 import { CauroselOrders } from './components/CarouselOrders';
 import { FormCreateOrder } from './components/FormCreateOrder/FormCreateOrder';
-import { filterOrdersForStatus } from './services/filters';
+import { SelectFilterOrderStatus } from './components/OrderCard/components/SelectFilterOrderStatus';
+import { filterOrders } from './services/filters';
 
 const OrdersPage: React.FC<{}> = ({}) => {
   const { dateRange } = useContext(DateContext);
@@ -21,25 +22,26 @@ const OrdersPage: React.FC<{}> = ({}) => {
     setOrdersFiltered(orders);
   }, [orders]);
 
+  const handleOrdersFiltered = (ordersFiltered: Order[]) => setOrdersFiltered(ordersFiltered);
+
   return (
     <main className="xl:col-span-11 h-full max-h-screen overflow-hidden bg-customSteelblue   items-center justify-center flex">
       {orders.length > 0 ? (
         <div className="flex items-end flex-col gap-3 ">
           <div className="flex items-center justify-between w-full">
-            <Select onValueChange={(status) => setOrdersFiltered(filterOrdersForStatus(orders, status))}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="FILTRAR ESTADO" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {Object.values(OrderStatus).map((status) => (
-                    <SelectItem key={status} value={status}>
-                      {status}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <SelectFilterOrderStatus handlerSetFilter={handleOrdersFiltered} orders={orders} />
+            <div className=" w-56">
+              <Input
+                type="number"
+                min={1}
+                placeholder="FILTRAR POR NUMERO"
+                onChange={(e) => {
+                  e.target.value
+                    ? handleOrdersFiltered(filterOrders(orders, 'orderNumber', Number(e.target.value)))
+                    : handleOrdersFiltered(orders);
+                }}
+              />
+            </div>
             <DialogComp buttonTrigger={<Button variant="outline">CREAR PEDIDO</Button>}>
               <FormCreateOrder onRefresh={handleRefresh} />
             </DialogComp>
