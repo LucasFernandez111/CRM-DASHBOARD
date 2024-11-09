@@ -94,7 +94,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
             <div className="flex items-center text-white justify-center bg-sky-600 size-12 transition ease-in-out  cursor-pointer hover:-translate-y-1 hover:scale-110 duration-150 rounded-full">
               <DialogComp
                 buttonTrigger={<BiSolidShow size={30} />}
-                title="Detalle Completo del Pedido"
+                title="DETALLE COMPLETO DEL PEDIDO"
                 description="Revisión de todos los elementos y detalles de tu orden"
               >
                 <ShowFullOrder
