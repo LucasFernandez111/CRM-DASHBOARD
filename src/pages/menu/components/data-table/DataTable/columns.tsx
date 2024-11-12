@@ -6,7 +6,7 @@ export type SheetData = {
   category: string;
   subcategory: string;
   price: string;
-  stock: number;
+  stock: string;
 };
 
 export const columns: ColumnDef<SheetData>[] = [
@@ -54,13 +54,28 @@ export const columns: ColumnDef<SheetData>[] = [
   },
   {
     accessorKey: 'price',
-    header: () => <div className="text-center">PRECIO</div>,
+
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          Precio
+          <ArrowUpDown className="ml-2 h-4 w-4 " />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       return <div className="text-center font-medium">{row.getValue('price')}</div>;
     },
   },
   {
     accessorKey: 'stock',
-    header: 'STOCK',
+    header: ({ column }) => {
+      return (
+        <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          STOCK
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
 ];
