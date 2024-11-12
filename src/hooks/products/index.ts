@@ -3,19 +3,45 @@ import { AppStore } from '@/redux/store';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNotification } from '../notification';
+import { SheetData } from '@/pages';
 
 export const useProducts = () => {
   const userState = useSelector((state: AppStore) => state.user);
-  const { alertError } = useNotification();
-  const [products, setProducts] = useState([]);
+  const { alertError, alertInfo } = useNotification();
+  const [products, setProducts] = useState<SheetData[]>([
+    {
+      category: '-',
+      subcategory: '-',
+      price: '0',
+      stock: '0',
+    },
+  ]);
+  const [refresh, setRefresh] = useState<Boolean>(false);
 
-  const [loading, setLoading] = useState(true);
+  const handleRefresh = () => setRefresh(!refresh);
+
+  const getTableProductsSheet = async () => {
+    try {
+      const response = await sheetProducts.getSheetProducts(userState.sheetId);
+
+      if (response.data.products.length === 0) alertInfo('No hay productos todavia en la sheet');
+
+      const productsStructured = sheetProducts.structureProductsData(response.data.products);
+
+      setProducts(productsStructured);
+    } catch (error) {
+      alertError('Error al cargar los productos');
+      console.error(error);
+    }
+  };
   useEffect(() => {
-    sheetProducts
-      .getSheetProducts(userState.sheetId)
-      .then((r) => setProducts(r.data?.products))
-      .catch((err) => alertError(err.message))
-      .finally(() => setLoading(!loading));
-  }, []);
-  return { products, loading };
+    const abortController = new AbortController();
+    if (!userState.sheetId) {
+      alertError('No hay ninguna sheet registrada');
+    } else {
+      getTableProductsSheet();
+    }
+    return () => abortController.abort();
+  }, [refresh, userState.sheetId]);
+  return { products, handleRefresh, getTableProductsSheet };
 };
