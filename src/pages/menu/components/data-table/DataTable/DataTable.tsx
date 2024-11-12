@@ -19,9 +19,10 @@ import { FormUpdateRows } from '../../FormUpdateRows';
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  onRefreshFetchTable?: () => void;
 }
 
-const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) => {
+const DataTable = <TData, TValue>({ columns, data, onRefreshFetchTable }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
@@ -42,6 +43,16 @@ const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValu
       rowSelection,
     },
   });
+
+  const getFirstRowSelected = () => table.getFilteredSelectedRowModel().rows[0];
+
+  const getFirstRowSelectedValue = () => getFirstRowSelected()?.original;
+
+  const getFirstRowSelectedRange = () => `A${getFirstRowSelected()?.index + 2}:D${getFirstRowSelected()?.index + 2}`;
+
+  const showButtonModify = (): Boolean => {
+    return table.getFilteredSelectedRowModel().rows.length > 0 && table.getFilteredSelectedRowModel().rows.length <= 1;
+  };
 
   return (
     <div className="rounded-md border ">
@@ -96,10 +107,10 @@ const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValu
 
       <div className="flex items-center justify-around space-x-2 py-4">
         <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-          Previous
+          Anterior
         </Button>
         <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-          Next
+          Siguiente
         </Button>
       </div>
       <div className="flex-1 flex-row flex justify-between  text-md font-semibold text-muted-foreground p-2 ">
@@ -108,17 +119,21 @@ const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValu
           seleccionadas
         </p>
 
-        {table.getFilteredSelectedRowModel().rows.length > 0 && (
+        {showButtonModify() && (
           <DialogComp
             buttonTrigger={
               <Button variant="default" size="sm">
-                Actualizar filas
+                Modificar fila
               </Button>
             }
-            description="Actualiza las filas seleccionadas de la tabla."
-            title="¿Deseas actualizar las filas seleccionadas?"
+            description="Modifica la información de las filas seleccionadas ."
+            title="¿Deseas modificar las filas seleccionadas?"
           >
-            <FormUpdateRows />
+            <FormUpdateRows
+              valueRowSelected={getFirstRowSelectedValue()}
+              rangeRowSelected={getFirstRowSelectedRange()}
+              onRefresh={onRefreshFetchTable}
+            />
           </DialogComp>
         )}
       </div>
