@@ -8,14 +8,7 @@ import { SheetData } from '@/pages';
 export const useProducts = () => {
   const userState = useSelector((state: AppStore) => state.user);
   const { alertError, alertInfo } = useNotification();
-  const [products, setProducts] = useState<SheetData[]>([
-    {
-      category: '-',
-      subcategory: '-',
-      price: '0',
-      stock: '0',
-    },
-  ]);
+  const [products, setProducts] = useState<SheetData[]>([]);
   const [refresh, setRefresh] = useState<Boolean>(false);
 
   const handleRefresh = () => setRefresh(!refresh);
