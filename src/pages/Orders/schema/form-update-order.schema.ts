@@ -1,30 +1,18 @@
 import { z } from 'zod';
 
-export const UpdateRowsSchema = z.object({
-  items: z.array(
-    z.object({
-      category: z.string().nonempty('La categoría es obligatoria'),
-      subcategory: z.string().nonempty('La subcategoría es obligatoria'),
-      price: z
-        .string()
-        .refine((val) => !isNaN(parseFloat(val)))
-        .transform((val) => parseFloat(val)),
-      stock: z
-        .string()
-        .refine((val) => !isNaN(parseFloat(val)))
-        .transform((val) => parseFloat(val)),
-    }),
-  ),
+export const UpdateRowSchema = z.object({
+  row: z.object({
+    category: z.string(),
+    subcategory: z.string(),
+    price: z.string(),
+    stock: z.string(),
+  }),
 });
 
-export const defaultValuesRows = {
+export const defaultValuesUpdateRow = {
   category: '',
   subcategory: '',
-  price: 0,
-  stock: 0,
+  price: '',
+  stock: '',
 };
-
-export const defaultValuesUpdateRows = {
-  items: [defaultValuesRows],
-};
-export type UpdateRowsType = z.infer<typeof UpdateRowsSchema>;
+export type UpdateRowsType = z.infer<typeof UpdateRowSchema>;
