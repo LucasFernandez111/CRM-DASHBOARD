@@ -12,11 +12,13 @@ interface Props {
   title?: string;
   description?: string;
   buttonTrigger: React.ReactNode;
+
+  isOpen?: boolean;
 }
 
-export const DialogComp: React.FC<Props> = ({ title = '', description = '', children, buttonTrigger }) => {
+export const DialogComp: React.FC<Props> = ({ title = '', description = '', children, buttonTrigger, isOpen }) => {
   return (
-    <Dialog>
+    <Dialog open={isOpen}>
       <DialogTrigger asChild>{buttonTrigger}</DialogTrigger>
 
       <DialogContent className="sm:max-w-[425px] lg:max-w-[700px] xl:max-w-[900px]">
