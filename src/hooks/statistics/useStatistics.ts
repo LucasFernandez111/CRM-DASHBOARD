@@ -2,10 +2,10 @@ import { StatisticsSales } from '@/api/interfaces/statistics.interface';
 import { StatisticsTopOrder } from '@/api/interfaces/top-order.interface';
 import { statistics } from '@/api/statistics';
 import { useEffect, useState } from 'react';
-import { useNotification } from '../notification';
+import { useNotification } from '../notification/useNotification';
 
 export const useStatistics = () => {
-  const { alertError } = useNotification();
+  const { alertWarning } = useNotification();
   const [statisticsGeneral, setStatisticsGeneral] = useState<StatisticsSales>({
     total: 0,
     current: {
@@ -44,7 +44,7 @@ export const useStatistics = () => {
         setStatisticsGeneral(data.sales);
       })
       .catch(() => {
-        alertError('Error al cargar las estadísticas');
+        alertWarning('Todavia no hay ordenes cargadas');
       });
 
     statistics
@@ -52,7 +52,7 @@ export const useStatistics = () => {
       .then((res) => {
         setStatisticsTopOrder(res.data.topOrder);
       })
-      .catch(() => alertError('Error al cargar las estadísticas'));
+      .catch(() => alertWarning('Todavia no hay ordenes cargadas'));
   }, []);
   return {
     statisticsTopOrder,

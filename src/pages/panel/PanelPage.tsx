@@ -11,12 +11,33 @@ const PanelPage = () => {
 
   return (
     <main className="col-span-11 grid grid-cols-4 h-full max-h-screen overflow-auto bg-customSteelblue p-7 gap-4">
-      <section className="rounded-3xl bg-white p-2 flex items-center flex-col">
-        <div className="flex items-center flex-col">
+      <section className="rounded-3xl bg-white p-2 flex items-center flex-col justify-around">
+        <div className="flex items-center flex-col ">
           <Avatar className="size-40">
             <AvatarImage src={userState.picture} alt={`${userState.firstName} `} />
             <AvatarFallback>{`${userState.firstName.charAt(0)}`}</AvatarFallback>
           </Avatar>
+        </div>
+
+        <div
+          className=" text-center border 
+text-2xl rounded-2xl p-6 bg-white shadow-xl w-full"
+        >
+          <h2 className=" font-extrabold">PLAN</h2>
+          <p>BETA</p>
+        </div>
+        <div
+          className="border text-center 
+text-2xl rounded-2xl p-6 bg-white shadow-xl w-full"
+        >
+          <h2 className=" font-bold">ID USUARIO</h2>
+
+          <span className=" font-extralight">{userState._id}</span>
+        </div>
+        <div className="border rounded-2xl p-6 bg-white text-2xl shadow-xl w-full text-center">
+          <h2 className="font-bold">ATENCION AL CLIENTE</h2>
+          <h2>+54 9 11-24084029</h2>
+          <h2>Comercial@okeycorp.com</h2>
         </div>
       </section>
 

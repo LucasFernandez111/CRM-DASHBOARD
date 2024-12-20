@@ -1,9 +1,9 @@
 import { orders, OrderStatus, PaymentMethod } from '@/api';
 import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
-import { useNotification } from '@/hooks';
-import { useCategories } from '@/hooks/use-categories';
+import { FormSelectField } from '@/components/FormSelectField';
+import { useNotification, useSheetProducts } from '@/hooks';
 import {
   createOrderSchema,
   CreateOrderType,
@@ -12,7 +12,9 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { FormInputField } from '../../../../../components/FormInputField';
-import { FormSelectField } from '../../../../../components/FormSelectField';
+import { ScrollArea } from '@/components';
+import { FormAddItem } from '../../FormAddItem';
+import { useEffect } from 'react';
 
 type FormCreateOrderProps = {
   onRefresh: () => void;
@@ -22,27 +24,44 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onRefresh }) => {
   const form = useForm<CreateOrderType>({
     resolver: zodResolver(createOrderSchema),
     defaultValues: defaultCreateOrderValues,
+    mode: 'onTouched',
   });
 
-  const { categories, subcategories } = useCategories();
+  const { products } = useSheetProducts();
   const { alertError, alertSuccess } = useNotification();
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'items',
   });
 
+  useEffect(() => {
+    console.log(form.watch());
+  }, [form.watch()]);
+  const extractPrice = (input: string): number => {
+    const sanitizedInput = input.replace(/[^\d.,]/g, '').replace(/,/g, '');
+    return parseFloat(sanitizedInput);
+  };
+
   const onSubmit = async (values: CreateOrderType) => {
-    try {
-      await orders.createOrder(values);
+    console.log(values);
 
-      alertSuccess('Orden creada correctamente');
+    // try {
+    //   await orders.createOrder(values);
 
-      form.reset(defaultCreateOrderValues);
+    //   alertSuccess('Orden creada correctamente');
 
-      onRefresh();
-    } catch (error) {
-      alertError('Error al crear la orden');
-    }
+    //   form.reset(defaultCreateOrderValues);
+
+    //   onRefresh();
+    // } catch (error) {
+    //   alertError('Error al crear la orden');
+    // }
+  };
+
+  const getTotalAmount = () => {
+    form.watch('items');
+
+    return form.getValues('items').reduce((total: number, item: any) => total + item.totalAmount, 0);
   };
 
   return (
@@ -53,7 +72,7 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onRefresh }) => {
           control={form.control}
           name="customer.name"
           render={({ field }) => (
-            <FormInputField label="Nombres" field={field} type="text" placeholder="Nombres" required />
+            <FormInputField label="Nombre" field={field} type="text" placeholder="Nombre" required />
           )}
         />
 
@@ -69,7 +88,7 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onRefresh }) => {
           control={form.control}
           name="customer.address.street"
           render={({ field }) => (
-            <FormInputField label="Direccion" type="text" field={field} placeholder="Calle 123" required />
+            <FormInputField label="Dirección" type="text" field={field} placeholder="Calle 123" required />
           )}
         />
 
@@ -97,80 +116,28 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onRefresh }) => {
           )}
         />
 
-        <section className=" col-span-3 h-56 overflow-y-auto space-y-8">
-          {fields.map((field, i) => (
-            <div key={i} className="border rounded-2xl p-6 bg-white shadow-xl grid grid-cols-4  space-x-3 ">
-              <FormField
-                control={form.control}
-                name={`items.${i}.category`}
-                render={({ field }) => (
-                  <FormSelectField placeholder="CATEGORIA" label="CATEGORIA" field={field} options={categories} />
-                )}
-              />
-              <FormField
-                control={form.control}
-                name={`items.${i}.subcategory`}
-                render={({ field }) => (
-                  <FormSelectField
-                    placeholder="SUBCATEGORIA"
-                    label="SUBCATEGORIA"
-                    field={field}
-                    options={subcategories}
-                  />
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name={`items.${i}.quantity`}
-                render={({ field }) => (
-                  <FormSelectField
-                    placeholder="0"
-                    label="CANTIDAD"
-                    field={field}
-                    options={Array.from({ length: 10 }, (_, i) => (i + 1).toString())} //Crea un Array con valores del 1 a 10
-                  />
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name={`items.${i}.price`}
-                render={({ field }) => <FormInputField placeholder="0" label="Precio" field={field} type="number" />}
-              />
-
-              <FormField
-                control={form.control}
-                name={`items.${i}.description`}
-                render={({ field }) => (
-                  <FormItem className="col-span-4">
-                    <FormLabel>Descripción</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="Descripción..." {...field}></Textarea>
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-          ))}
-        </section>
+        <ScrollArea className="col-span-3 h-80 border p-4 rounded-lg">
+          <FormAddItem fields={fields} form={form} products={products} />
+        </ScrollArea>
 
         <FormField
           control={form.control}
           name="notes"
           render={({ field }) => (
             <FormItem className="col-span-3">
-              <FormLabel>Notas adicionales</FormLabel>
               <FormControl>
-                <Textarea placeholder="Notas..." {...field}></Textarea>
+                <Textarea placeholder="Notas adicionales" {...field}></Textarea>
               </FormControl>
             </FormItem>
           )}
         />
 
+        <section className="flex items-end justify-end col-span-3 pr-3  ">
+          <h1>TOTAL: </h1>
+        </section>
         <Button
           type="button"
-          onClick={() => append({ category: '', subcategory: '', quantity: 1, price: 1, description: '' })}
+          onClick={() => append({ category: '', subcategory: '', quantity: 1, price: '', description: '' })}
         >
           +
         </Button>

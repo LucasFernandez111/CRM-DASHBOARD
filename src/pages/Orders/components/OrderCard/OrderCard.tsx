@@ -3,15 +3,18 @@ import { Order, OrderItem, orders } from '@/api';
 import { DialogComp } from '@/components/DialogComp';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { useNotification } from '@/hooks';
 import { FormCheckBoxStatusOrder } from '@/pages/panel/components/FormCheckBoxStatusOrder';
 import React from 'react';
 import { BiSolidShow } from 'react-icons/bi';
 import { IoPrintSharp } from 'react-icons/io5';
 import { MdDeleteForever } from 'react-icons/md';
 import { ShowFullOrder } from './components/ShowFullOrder';
+import { useNotification } from '@/hooks';
+import { Badge } from '@/components/ui/badge';
 
-export interface OrderCardProps extends Order {}
+export interface OrderCardProps extends Order {
+  onRefresh: () => void;
+}
 
 const OrderCard: React.FC<OrderCardProps> = ({
   _id,
@@ -22,6 +25,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
   totalAmount,
   paymentDetails,
   createdAt,
+  onRefresh,
 }) => {
   const { alertError } = useNotification();
 
@@ -38,7 +42,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
   const handleClickDelete = async (_id: string) => {
     try {
       await orders.deleteOrder(_id);
-      window.location.reload();
+      onRefresh();
     } catch (error) {
       alertError('Error al eliminar el pedido');
     }
@@ -79,10 +83,32 @@ const OrderCard: React.FC<OrderCardProps> = ({
                         <p className="line-clamp-1">{item.subcategory}</p>
                       </div>
                       <Separator className="bg-slate-600 bg-opacity-35" />
+                      {index === 1 && (
+                        <DialogComp
+                          buttonTrigger={
+                            <Badge variant="outline" className="cursor-pointer">
+                              {' '}
+                              ver mas...
+                            </Badge>
+                          }
+                          title="DETALLE COMPLETO DEL PEDIDO"
+                          description="Revisión de todos los elementos y detalles de tu orden"
+                        >
+                          <ShowFullOrder
+                            customer={customer}
+                            items={items}
+                            orderNumber={orderNumber}
+                            totalAmount={totalAmount}
+                            paymentDetails={paymentDetails}
+                            onPrint={() => handleClickPDF(_id)}
+                          />
+                        </DialogComp>
+                      )}
                     </>
                   ),
               )}
             </div>
+
             <div className="w-2/4 space-y-1 text-center">
               <h1 className="text-5xl font-bold">${totalAmount}</h1>
               <h2 className="text-xl font-extralight">{paymentDetails.method}</h2>

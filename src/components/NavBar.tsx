@@ -1,3 +1,4 @@
+import { orders } from '@/api';
 import { auth } from '@/api/auth';
 import { LOGO_WB } from '@/assets';
 import { useNotification } from '@/hooks';
@@ -18,6 +19,14 @@ export default function NavBar() {
       alertError('Error al cerrar sesion');
     }
   };
+
+  const onPrint = () => {
+    try {
+      orders.getPDFSales();
+    } catch (error) {
+      alertError('Error al generar el PDF');
+    }
+  };
   return (
     <nav className="col-span-full  p-4">
       <div className="flex justify-around">
@@ -31,7 +40,10 @@ export default function NavBar() {
           <li className="px-4 h-20 flex items-center hover:text-sky-400 transition duration-200 cursor-pointer">
             <Link to="/panel">PANEL ADMINISTRADOR</Link>
           </li>
-          <li className="px-4 h-20 flex items-center hover:text-sky-400 transition duration-200 cursor-pointer">
+          <li
+            className="px-4 h-20 flex items-center hover:text-sky-400 transition duration-200 cursor-pointer"
+            onClick={onPrint}
+          >
             EXPORTAR
           </li>
         </ul>

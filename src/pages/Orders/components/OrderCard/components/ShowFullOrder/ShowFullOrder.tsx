@@ -1,5 +1,6 @@
 'use client';
 import { OrderCustomer, OrderItem, OrderPaymentDetails } from '@/api';
+import { ScrollArea } from '@/components';
 import { DialogComp } from '@/components/DialogComp';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -24,8 +25,8 @@ const ShowFullOrder: React.FC<ShowFullOrderProps> = ({
   paymentDetails,
 }) => {
   return (
-    <div className="flex flex-col space-y-10 ">
-      <header className="flex flex-col items-center text-3xl font-semibold space-y-3">
+    <div className="flex flex-col space-y-4">
+      <header className="flex flex-col items-center text-2xl font-semibold space-y-3">
         <h1>{customer.name}</h1>
         <h2>{customer.phone}</h2>
         <h2>
@@ -36,27 +37,29 @@ const ShowFullOrder: React.FC<ShowFullOrderProps> = ({
         </h2>
       </header>
 
-      <section className="p-5 space-y-10">
-        <div className="flex flex-col space-y-3  overflow-auto">
-          {items.map((item: OrderItem) => (
-            <>
-              <Separator className="bg-slate-600 bg-opacity-35" />
-              <article className="flex justify-around items-center text-2xl font-normal">
-                <div className="w-2/6">
-                  <p>
-                    {item.quantity} X {item.category}
-                  </p>
-                  <p>{item.subcategory}</p>
+      <ScrollArea className="h-64 border border-cyan-200 rounded-3xl">
+        {items.map((item: OrderItem) => (
+          <div>
+            <Separator className="bg-slate-600 bg-opacity-35" />
+            <article className="flex justify-around items-center text-xl font-normal p-3">
+              <div className="w-2/6">
+                <p>
+                  {item.quantity} X {item.category}
+                </p>
+                <p>{item.subcategory}</p>
+              </div>
+              <DialogComp title="DESCRIPCION DEL PRODUCTO" buttonTrigger={<Button>ver descripcion</Button>}>
+                <div className="w-9/12 p-3 whitespace-normal break-words">
+                  <p className="text-2xl">{item.description}</p>
                 </div>
-                <DialogComp title="DESCRIPCION DEL PRODUCTO" buttonTrigger={<Button>ver descripcion</Button>}>
-                  <p className="text-center text-3xl text-wrap">{item.description}</p>
-                </DialogComp>
-                <p>${item.price}</p>
-              </article>
-              <Separator className="bg-slate-600 bg-opacity-35" />
-            </>
-          ))}
-        </div>
+              </DialogComp>
+              <p>${item.price}</p>
+            </article>
+            <Separator className="bg-slate-600 bg-opacity-35" />
+          </div>
+        ))}
+      </ScrollArea>
+      <section className="p-2 space-y-2 ">
         <div className="flex flex-col  items-end  font-bold text-3xl mt-8">
           <h1>TOTAL: ${totalAmount}</h1>
           <h1>{paymentDetails.method}</h1>

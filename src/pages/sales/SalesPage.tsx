@@ -3,7 +3,7 @@ import { CardWithStatistics } from './components/CardWithStatistics';
 import { ChartSales } from './components/ChartSales';
 import { ChartSalesData } from './types';
 import { FaArrowRight, FaArrowLeft } from 'react-icons/fa6';
-import { useStatistics } from '@/hooks/statistics';
+import { useStatistics } from '@/hooks';
 
 const SalesPage = () => {
   const [nextStatistics, setNextStatistics] = useState<Boolean>(false);
@@ -35,50 +35,53 @@ const SalesPage = () => {
     }
   }, [statisticsGeneral]);
   return (
-    <main className=" col-span-11 grid grid-cols-2 grid-rows-5  h-full max-h-screen overflow-auto bg-customSteelblue">
-      {/* CHART*/}
-      <section className="row-span-4 p-24 mt-11 ">
-        <ChartSales chartData={chartData} />
-      </section>
+    <main className=" col-span-11   bg-customSteelblue ">
+      <div className="flex flex-col h-full justify-center items-center gap-14">
+        <section className="  flex justify-around items-center  w-full ">
+          <div className="flex-1 max-w-xl">
+            <ChartSales chartData={chartData} />
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            {nextStatistics ? (
+              <>
+                <CardWithStatistics description="VENTAS X DÍA" title={`$${statisticsGeneral.current.day}`} />
+                <CardWithStatistics description="VENTAS SEMANALES" title={`$${statisticsGeneral.current.week}`} />
+                <CardWithStatistics description="VENTAS X MES" title={`$${statisticsGeneral.current.month}`} />
+                <CardWithStatistics description="VENTAS X AÑO" title={`$${statisticsGeneral.current.year}`} />
+              </>
+            ) : (
+              <>
+                <CardWithStatistics description="VENTAS TOTAL" title={`$${statisticsGeneral.total}`} />
+                <CardWithStatistics
+                  description="PEDIDOS DIARIOS PRODUCTO TOP"
+                  title={statisticsTopOrder.period.count}
+                />
+                <CardWithStatistics
+                  description="PEDIDO MAS COMPRADO"
+                  title={statisticsTopOrder.period.category + ' - ' + statisticsTopOrder.period.subcategory}
+                />
+                <CardWithStatistics
+                  description="PRECIO PEDIDO MAS VENDIDO "
+                  title={`$${statisticsTopOrder.period.totalAmount}`}
+                />
+              </>
+            )}
+          </div>
+        </section>
 
-      {/* CARDS */}
-      <section className="row-span-4 grid grid-cols-2 justify-center items-center gap-2 p-32">
-        {nextStatistics ? (
-          <>
-            <CardWithStatistics description="VENTAS X DÍA" title={`$${statisticsGeneral.current.day}`} />
-            <CardWithStatistics description="VENTAS SEMANALES" title={`$${statisticsGeneral.current.week}`} />
-            <CardWithStatistics description="VENTAS X MES" title={`$${statisticsGeneral.current.month}`} />
-            <CardWithStatistics description="VENTAS X AÑO" title={`$${statisticsGeneral.current.year}`} />
-          </>
-        ) : (
-          <>
-            <CardWithStatistics description="VENTAS TOTAL" title={`$${statisticsGeneral.total}`} />
-            <CardWithStatistics description="PEDIDOS DIARIOS PRODUCTO TOP" title={statisticsTopOrder.period.count} />
-            <CardWithStatistics
-              description="PEDIDO MAS COMPRADO"
-              title={statisticsTopOrder.period.category + ' - ' + statisticsTopOrder.period.subcategory}
-            />
-            <CardWithStatistics
-              description="PRECIO PEDIDO MAS VENDIDO "
-              title={statisticsTopOrder.period.totalAmount}
-            />
-          </>
-        )}
-      </section>
-
-      {/* BUTTONS */}
-      <section className="flex justify-around items-center  col-span-2 row-span-1 ">
-        <FaArrowLeft
-          size={50}
-          className="text-white  transform hover:scale-50 duration-300"
-          onClick={() => setNextStatistics(!nextStatistics)}
-        />
-        <FaArrowRight
-          size={50}
-          className="text-white transform hover:scale-50 duration-300"
-          onClick={() => setNextStatistics(!nextStatistics)}
-        />
-      </section>
+        <section className="flex justify-around items-center w-full   ">
+          <FaArrowLeft
+            size={50}
+            className="text-white  transform hover:scale-50 duration-300"
+            onClick={() => setNextStatistics(!nextStatistics)}
+          />
+          <FaArrowRight
+            size={50}
+            className="text-white transform hover:scale-50 duration-300"
+            onClick={() => setNextStatistics(!nextStatistics)}
+          />
+        </section>
+      </div>
     </main>
   );
 };

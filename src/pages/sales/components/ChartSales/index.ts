@@ -1,1 +1,1 @@
-export { default as ChartSales } from './ChartSales';
+export { ChartSales } from './ChartSales';

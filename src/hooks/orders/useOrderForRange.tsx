@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { orders as ordersService } from '@/api';
-import { useNotification } from '../notification';
-const useOrderForRange = ({ startDate = '', endDate = '' }) => {
+import { useOrdersContext } from './useOrdersContext';
+import { useNotification } from '../notification/useNotification';
+export const useOrderForRange = ({ startDate = '', endDate = '' }) => {
   const { alertError } = useNotification();
+  const { handleOrders } = useOrdersContext();
   const [orders, setOrders] = useState<any[]>([]);
 
   const [refresh, setRefresh] = useState(false);
@@ -11,7 +13,12 @@ const useOrderForRange = ({ startDate = '', endDate = '' }) => {
   const getOrdersForRange = async () => {
     try {
       const res = await ordersService.getOrdersForRange(startDate, endDate);
-      if (res.data?.orders) setOrders(res.data.orders);
+      console.log(res);
+
+      if (res.data?.orders) {
+        setOrders(res.data.orders);
+        handleOrders(res.data.orders);
+      }
     } catch (error) {
       alertError('Error al cargar las ordenes');
     }
@@ -27,5 +34,3 @@ const useOrderForRange = ({ startDate = '', endDate = '' }) => {
     handleRefresh,
   };
 };
-
-export default useOrderForRange;

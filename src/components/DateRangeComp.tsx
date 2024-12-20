@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import { useState, useEffect, useCallback, useContext } from 'react';
 import { addDays, format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { DateRangePicker, Range } from 'react-date-range';

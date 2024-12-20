@@ -7,16 +7,17 @@ import { GeneralMessage } from '@/components/GeneralMessage';
 
 export type CauroselOrdersProps = {
   orders: Order[];
+  onRefresh: () => void;
 };
 
-const CauroselOrders: React.FC<CauroselOrdersProps> = ({ orders }) => {
+const CauroselOrders: React.FC<CauroselOrdersProps> = ({ orders, onRefresh }) => {
   return (
     <Carousel className="w-full lg:min-w-[1600px] lg:max-w-[1600px]">
       <CarouselContent>
         {orders.length > 0 ? (
           orders.map((order: Order, index) => (
             <CarouselItem className="md:basis-1/2 lg:basis-1/3 ">
-              <OrderCard key={index} {...order} />
+              <OrderCard key={index} {...order} onRefresh={onRefresh} />
             </CarouselItem>
           ))
         ) : (

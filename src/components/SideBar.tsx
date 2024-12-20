@@ -6,6 +6,9 @@ export const SideBar: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { dateRange } = useContext(DateContext);
+
+  console.log(dateRange);
+
   const navigate = useNavigate();
 
   const handleItemClick = (index: number | null) => setActiveIndex(index);

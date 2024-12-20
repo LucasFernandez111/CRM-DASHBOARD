@@ -14,7 +14,7 @@ export type FormSelectFieldProps = {
 const FormSelectField: React.FC<FormSelectFieldProps> = ({
   label,
   field,
-  placeholder = '',
+  placeholder,
   options,
   disable,
   className,
@@ -23,9 +23,9 @@ const FormSelectField: React.FC<FormSelectFieldProps> = ({
     <FormItem className={className}>
       <FormLabel>{label}</FormLabel>
       <FormControl>
-        <Select onValueChange={field.onChange} value={field.value} disabled={disable} required>
+        <Select onValueChange={field.onChange} value={field.value} disabled={disable}>
           <SelectTrigger className="w-full">
-            <SelectValue placeholder={placeholder} />
+            {placeholder ? <SelectValue placeholder={placeholder} /> : <SelectValue />}
           </SelectTrigger>
 
           <SelectContent>

@@ -16,7 +16,6 @@ export const AppRouter: React.FC<{}> = () => {
     <Routes>
       <Route path="/" element={<Navigate to={PrivateRoutes.SALES} />} />
 
-      <Route path={PublicRoutes.LOGIN} element={<LoginPage />} />
       <Route path={PublicRoutes.AUTH_GOOGLE} element={<AuthCallbackGuard />} />
       <Route element={<AuthGuard />}>
         <Route path="/" element={<RouterLayout />}>

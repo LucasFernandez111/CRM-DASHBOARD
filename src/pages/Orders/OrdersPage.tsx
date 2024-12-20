@@ -1,18 +1,13 @@
-'use client';
 import { Order } from '@/api';
-import { DialogComp } from '@/components/DialogComp';
-import { GeneralMessage } from '@/components/GeneralMessage';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { DateContext } from '@/context/DateContextProvider';
-import useOrderForRange from '@/hooks/orders/useOrderForRange';
-import React, { useContext, useEffect, useState } from 'react';
-import { IoIosAddCircle } from 'react-icons/io';
+import { Input, DialogComp, Button, GeneralMessage } from '@/components';
+import { DateContext } from '@/context';
+import { useContext, useState, useEffect } from 'react';
 import { CauroselOrders } from './components/CarouselOrders';
 import { FormCreateOrder } from './components/FormCreateOrder/FormCreateOrder';
 import { SelectFilterOrderStatus } from './components/OrderCard/components/SelectFilterOrderStatus';
 import { filterOrders } from './services/filters';
-
+import { useOrderForRange } from '@/hooks';
+import { IoIosAddCircle } from 'react-icons/io';
 const OrdersPage: React.FC<{}> = ({}) => {
   const { dateRange } = useContext(DateContext);
   const { orders, handleRefresh } = useOrderForRange(dateRange);
@@ -47,7 +42,7 @@ const OrdersPage: React.FC<{}> = ({}) => {
             </DialogComp>
           </div>
 
-          <CauroselOrders orders={ordersFiltered} />
+          <CauroselOrders orders={ordersFiltered} onRefresh={handleRefresh} />
         </div>
       ) : (
         <section className="flex flex-col items-center space-y-3">

@@ -10,7 +10,7 @@ export type CardWithStatisticsProps = {
 
 const CardWithStatistics: React.FC<CardWithStatisticsProps> = ({ title, description, className }) => {
   return (
-    <Card className={cn('w-72 h-40  text-center flex items-center justify-center rounded-4xl p-2', className)}>
+    <Card className={cn('w-72 h-40  text-center flex items-center justify-center rounded-4xl p-3', className)}>
       <CardHeader>
         <CardTitle className="text-3xl font-extrabold text-customSteelblue">{title} </CardTitle>
         <CardDescription className="text-xl font-extrabold text-customSteelblue">{description}</CardDescription>

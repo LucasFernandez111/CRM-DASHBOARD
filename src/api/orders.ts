@@ -1,12 +1,14 @@
+import { AxiosResponse } from 'axios';
 import { instance, BASE_URL } from './base.api';
 import { ENDPOINTS } from './endpoints';
 import { Order, CreateOrder, UpdateOrder } from './interfaces';
 
-const getOrders = (): Promise<Order> => instance.get(ENDPOINTS.ORDERS);
+const getOrders = (): Promise<AxiosResponse<Order[]>> => instance.get(ENDPOINTS.ORDERS);
 
 const createOrder = (order: CreateOrder): Promise<Order> => instance.post(ENDPOINTS.ORDERS, order);
 
-const getPDFOrders = (id: string) => (window.location.href = `${BASE_URL}/${ENDPOINTS.ORDERS_PDF}${id}`);
+const getPDFBill = (id: string) => (window.location.href = `${BASE_URL}/${ENDPOINTS.REPORTS}/bill/${id}`);
+const getPDFSales = () => (window.location.href = `${BASE_URL}/${ENDPOINTS.REPORTS}/sales/`);
 
 const deleteOrder = (id: string) => instance.delete(`${ENDPOINTS.ORDERS}/${id}`);
 
@@ -18,8 +20,9 @@ const getOrdersForRange = (startDate: string, endDate: string): Promise<any> =>
 export const orders = {
   updateOrder,
   getOrders,
-  getPDFOrders,
+  getPDFOrders: getPDFBill,
   deleteOrder,
   getOrdersForRange,
   createOrder,
+  getPDFSales,
 };
