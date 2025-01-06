@@ -9,7 +9,7 @@ export const useSheetMenu = () => {
   const userState = useSelector((state: AppStore) => state.user);
   const { alertError, alertInfo } = useNotification();
   const [menu, setMenu] = useState<SheetData[]>([]);
-  const [refresh, setRefresh] = useState<Boolean>(false);
+  const [refresh, setRefresh] = useState<boolean>(false);
 
   const handleRefresh = () => setRefresh(!refresh);
 

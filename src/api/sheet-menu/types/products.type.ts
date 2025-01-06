@@ -1,5 +1,10 @@
 export type Product = {
   category: string;
-  subcategories: string[];
-  prices: string[];
+  subcategory: ProductSubcategories[];
+  stock: string;
+};
+
+export type ProductSubcategories = {
+  name: string;
+  price: string;
 };

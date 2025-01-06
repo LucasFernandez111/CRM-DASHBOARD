@@ -20,9 +20,9 @@ const OrdersPage: React.FC<{}> = ({}) => {
   const handleOrdersFiltered = (ordersFiltered: Order[]) => setOrdersFiltered(ordersFiltered);
 
   return (
-    <main className="xl:col-span-11 h-full max-h-screen overflow-hidden bg-customSteelblue   items-center justify-center flex">
+    <main className="flex-1 p-24 bg-customSteelblue justify-center items-center">
       {orders.length > 0 ? (
-        <div className="flex items-end flex-col gap-3 ">
+        <div className="flex flex-col gap-3 ">
           <div className="flex items-center justify-between w-full">
             <SelectFilterOrderStatus handlerSetFilter={handleOrdersFiltered} orders={orders} />
             <div className=" w-56">
@@ -45,7 +45,7 @@ const OrdersPage: React.FC<{}> = ({}) => {
           <CauroselOrders orders={ordersFiltered} onRefresh={handleRefresh} />
         </div>
       ) : (
-        <section className="flex flex-col items-center space-y-3">
+        <section className="flex flex-col justify-center items-center h-full">
           <GeneralMessage message="Todavia no hay pedidos" />
           <DialogComp
             buttonTrigger={

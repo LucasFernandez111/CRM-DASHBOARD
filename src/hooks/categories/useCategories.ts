@@ -12,12 +12,15 @@ export const useSheetProducts = () => {
 
   const getProducts = async () => {
     try {
-      const response = await sheetProducts.getSheetCategories(userState.sheetId);
+      const response = await sheetProducts.getSheetProducts(userState.sheetId);
 
       if (response.data.length === 0) alertError('No hay categorias todavia en la sheet');
 
       setProducts(response.data);
-    } catch (error) {}
+    } catch (error) {
+      alertError('Error al Obtener los productos');
+      console.error(error);
+    }
   };
 
   useEffect(() => {

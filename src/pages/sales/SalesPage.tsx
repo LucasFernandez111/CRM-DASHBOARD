@@ -6,8 +6,8 @@ import { FaArrowRight, FaArrowLeft } from 'react-icons/fa6';
 import { useStatistics } from '@/hooks';
 
 const SalesPage = () => {
-  const [nextStatistics, setNextStatistics] = useState<Boolean>(false);
-  const { statisticsTopOrder, statisticsGeneral } = useStatistics();
+  const [nextStatistics, setNextStatistics] = useState<boolean>(false);
+  const { statisticsTopOrder, statisticsGeneral, statisticsMonths } = useStatistics();
 
   const [chartData, setChartData] = useState<ChartSalesData[]>([
     { month: 'ENERO', sales: 0 },
@@ -28,16 +28,16 @@ const SalesPage = () => {
     if (statisticsGeneral) {
       const updatedChartData = chartData.map((data, i) => ({
         ...data,
-        sales: statisticsGeneral.periodSales.salesMonth[i]?.total || 0,
+        sales: statisticsMonths[i]?.total || 0,
       }));
 
       setChartData(updatedChartData);
     }
   }, [statisticsGeneral]);
   return (
-    <main className=" col-span-11   bg-customSteelblue ">
-      <div className="flex flex-col h-full justify-center items-center gap-14">
-        <section className="  flex justify-around items-center  w-full ">
+    <main className="flex-1 p-4 bg-customSteelblue">
+      <div className="flex flex-col  h-full justify-around items-center  w-full ">
+        <section className="  flex justify-around items-center    w-full  lg:gap-9">
           <div className="flex-1 max-w-xl">
             <ChartSales chartData={chartData} />
           </div>
@@ -56,10 +56,7 @@ const SalesPage = () => {
                   description="PEDIDOS DIARIOS PRODUCTO TOP"
                   title={statisticsTopOrder.period.count}
                 />
-                <CardWithStatistics
-                  description="PEDIDO MAS COMPRADO"
-                  title={statisticsTopOrder.period.category + ' - ' + statisticsTopOrder.period.subcategory}
-                />
+                <CardWithStatistics description="PEDIDO MAS COMPRADO" title={statisticsTopOrder.period.subcategory} />
                 <CardWithStatistics
                   description="PRECIO PEDIDO MAS VENDIDO "
                   title={`$${statisticsTopOrder.period.totalAmount}`}

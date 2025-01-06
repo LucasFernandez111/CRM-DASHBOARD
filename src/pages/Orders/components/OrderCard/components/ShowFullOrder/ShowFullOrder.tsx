@@ -1,8 +1,6 @@
 'use client';
 import { OrderCustomer, OrderItem, OrderPaymentDetails } from '@/api';
 import { ScrollArea } from '@/components';
-import { DialogComp } from '@/components/DialogComp';
-import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import React from 'react';
 import { IoPrintSharp } from 'react-icons/io5';
@@ -37,22 +35,18 @@ const ShowFullOrder: React.FC<ShowFullOrderProps> = ({
         </h2>
       </header>
 
-      <ScrollArea className="h-64 border border-cyan-200 rounded-3xl">
-        {items.map((item: OrderItem) => (
-          <div>
+      <ScrollArea className="h-64 border border-black rounded-3xl">
+        {items.map((item: OrderItem, i) => (
+          <div key={i}>
             <Separator className="bg-slate-600 bg-opacity-35" />
-            <article className="flex justify-around items-center text-xl font-normal p-3">
-              <div className="w-2/6">
+            <article className="flex justify-around items-center text-2xl font-normal p-3">
+              <div>
                 <p>
                   {item.quantity} X {item.category}
                 </p>
-                <p>{item.subcategory}</p>
               </div>
-              <DialogComp title="DESCRIPCION DEL PRODUCTO" buttonTrigger={<Button>ver descripcion</Button>}>
-                <div className="w-9/12 p-3 whitespace-normal break-words">
-                  <p className="text-2xl">{item.description}</p>
-                </div>
-              </DialogComp>
+              <p>{item.subcategory}</p>
+
               <p>${item.price}</p>
             </article>
             <Separator className="bg-slate-600 bg-opacity-35" />

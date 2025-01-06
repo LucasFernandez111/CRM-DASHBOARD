@@ -7,7 +7,7 @@ const Header = () => {
         <img src={LOGO} className="object-cover lg:w-28 lg:h-28" alt="" />
       </div>
 
-      <NavBar />
+      <NavBar toggleSidebar={() => {}} />
     </header>
   );
 };

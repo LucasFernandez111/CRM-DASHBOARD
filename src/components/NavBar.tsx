@@ -1,24 +1,18 @@
 import { orders } from '@/api';
-import { auth } from '@/api/auth';
 import { LOGO_WB } from '@/assets';
 import { useNotification } from '@/hooks';
-import { resetUser } from '@/redux/states';
 import { AppStore } from '@/redux/store';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { FaAlignJustify } from 'react-icons/fa6';
 
-export default function NavBar() {
-  const distpatch = useDispatch();
+export default function NavBar({ toggleSidebar }: { toggleSidebar: (isOpen: boolean) => void }) {
   const userState = useSelector((state: AppStore) => state.user);
   const { alertError } = useNotification();
-  const logOut = async () => {
-    try {
-      await auth.logOut();
-      distpatch(resetUser());
-    } catch (err) {
-      alertError('Error al cerrar sesion');
-    }
-  };
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const handleCloseApp = () => window.ipcRenderer.send('close-window');
 
   const onPrint = () => {
     try {
@@ -27,12 +21,28 @@ export default function NavBar() {
       alertError('Error al generar el PDF');
     }
   };
+
+  const handleSidebarToggle = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+    toggleSidebar(!isSidebarOpen);
+  };
+
   return (
-    <nav className="col-span-full  p-4">
-      <div className="flex justify-around">
-        <div className="max-w-20 max-height-20 bg-customSteelblue rounded-2xl">
-          <img src={LOGO_WB} alt="Logo Company" className=" object-cover size-20" />
+    <nav className=" z-50 bg-white col-span-full  h-28 p-4">
+      <div className="flex  justify-between items-center h-full">
+        <div className="flex justify-center items-center gap-8 ">
+          <div
+            onClick={handleSidebarToggle}
+            className="bg-customSteelblue  rounded-full p-5  cursor-pointer transition duration-300 hover:bg-sky-400"
+          >
+            <FaAlignJustify size={30} color="white" />
+          </div>
+
+          <div className="max-w-20 max-height-20 bg-customSteelblue rounded-2xl">
+            <img src={LOGO_WB} alt="Logo Company" className=" object-cover size-20" />
+          </div>
         </div>
+
         <ul className="flex justify-center lg:text-4xl font-extrabold text-customSteelblue divide-x divide-customSteelblue">
           <li className="px-4 h-20 flex items-center hover:text-sky-400 transition duration-200 cursor-pointer uppercase">
             {userState.company ?? 'COMPANIA'}
@@ -47,9 +57,10 @@ export default function NavBar() {
             EXPORTAR
           </li>
         </ul>
+
         <button
-          className="bg-customSteelblue text-white rounded-3xl px-6 py-2 text-2xl font-extrabold transition duration-300 hover:bg-sky-400"
-          onClick={logOut}
+          className="bg-customSteelblue text-white rounded-2xl p-5 text-2xl font-extrabold transition duration-300 hover:bg-sky-400"
+          onClick={handleCloseApp}
         >
           SALIR
         </button>

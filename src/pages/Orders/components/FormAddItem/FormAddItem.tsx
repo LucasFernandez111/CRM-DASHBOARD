@@ -1,42 +1,44 @@
 'use client';
-import { FormField, FormItem, FormLabel, FormControl, Input, Textarea, Button } from '@/components';
+import {
+  Button,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  Input,
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components';
 import { FormSelectField } from '@/components/FormSelectField';
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem } from '@/components';
 
-import React, { useEffect, useState } from 'react';
 import { Product } from '@/api';
+import React, { useEffect, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { CreateOrderType } from '../../schema/form.create.order.schema';
-
+import { useSheetProducts } from '@/hooks';
+import { MdPriceChange } from 'react-icons/md';
 export type FormAddItemProps = {
   fields: any;
   form: UseFormReturn<CreateOrderType>;
-  products: any;
 };
 
-const FormAddItem: React.FC<FormAddItemProps> = ({ fields, form, products }) => {
-  const [selectedProduct, setSelectedProduct] = useState<Product>({
-    category: '',
-    subcategories: [],
-    prices: [],
-  });
-  const [price, setPrice] = useState<string[]>(['']);
-  const [editPrice, setEditPrice] = useState<boolean>(false);
+const FormAddItem: React.FC<FormAddItemProps> = ({ fields, form }) => {
+  const { products } = useSheetProducts();
 
-  const handleOnValueChange = (category: string): void => {
-    const product = getSelectedProduct(category, products);
+  const [productsList, setProductsList] = useState([]);
 
-    if (product) setSelectedProduct({ ...product });
+  const getSubcategories = (category: string) =>
+    products.find((product: Product) => product.category === category)?.subcategory;
+
+  const getPrice = (category: string, subcategory: string) => {
+    const subcategories = getSubcategories(category);
+
+    return subcategories?.find((sub) => sub.name === subcategory)?.price;
   };
-
-  const getSubcategoryPrice = (product: Product, subcategory: string) => {
-    const index = product.subcategories.indexOf(subcategory);
-
-    return product.prices[index];
-  };
-
-  const getSelectedProduct = (category: string, products: Product[]) =>
-    products.find((product: Product) => product.category == category);
 
   return (
     <div className="space-y-4">
@@ -51,14 +53,13 @@ const FormAddItem: React.FC<FormAddItemProps> = ({ fields, form, products }) => 
                 <FormControl>
                   <Select
                     onValueChange={(category) => {
-                      handleOnValueChange(category);
                       return field.onChange(category);
                     }}
                     value={field.value}
                     required
                   >
                     <SelectTrigger className="w-full">
-                      <SelectValue />
+                      <SelectValue placeholder="Seleccione una categoria" />
                     </SelectTrigger>
 
                     <SelectContent>
@@ -86,25 +87,25 @@ const FormAddItem: React.FC<FormAddItemProps> = ({ fields, form, products }) => 
                 <FormControl>
                   <Select
                     onValueChange={(subcategory) => {
-                      setPrice([...price, getSubcategoryPrice(selectedProduct, subcategory)]);
-
                       return field.onChange(subcategory);
                     }}
                     value={field.value}
                     required
                   >
                     <SelectTrigger className="w-full">
-                      <SelectValue />
+                      <SelectValue placeholder="Seleccione una subcategoria" />
                     </SelectTrigger>
 
                     <SelectContent>
                       <SelectGroup>
-                        {selectedProduct &&
-                          selectedProduct.subcategories.map((subcategory: string, i: number) => (
-                            <SelectItem key={i} value={subcategory}>
-                              {subcategory}
-                            </SelectItem>
-                          ))}
+                        {getSubcategories(form.watch(`items.${i}.category`)) &&
+                          getSubcategories(form.watch(`items.${i}.category`))!.map((sub) => {
+                            return (
+                              <SelectItem key={sub.name} value={sub.name}>
+                                {sub.name}
+                              </SelectItem>
+                            );
+                          })}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -125,9 +126,14 @@ const FormAddItem: React.FC<FormAddItemProps> = ({ fields, form, products }) => 
             )}
           />
           <div className="flex items-end justify-start gap-2">
-            <Button type="button" className="w-16" variant={'outline'} onClick={() => setEditPrice(!editPrice)}>
-              editar
-            </Button>
+            {/* <Button
+              size="sm"
+              variant={automaticPrice ? 'outline' : 'default'}
+              onClick={() => setAutomaticPrice(!automaticPrice)}
+            >
+              <MdPriceChange color={automaticPrice ? 'black' : ''} />
+            </Button> */}
+
             <FormField
               control={form.control}
               name={`items.${i}.price`}
@@ -135,24 +141,12 @@ const FormAddItem: React.FC<FormAddItemProps> = ({ fields, form, products }) => 
                 <FormItem>
                   <FormLabel>Precio</FormLabel>
                   <FormControl>
-                    <Input type="text" value={() => form.setValue(`items.${i}.price`, price[i])} {...field} />
+                    <Input type="number" required {...field} />
                   </FormControl>
                 </FormItem>
               )}
             />
           </div>
-
-          <FormField
-            control={form.control}
-            name={`items.${i}.description`}
-            render={({ field }) => (
-              <FormItem className="col-span-4">
-                <FormControl>
-                  <Textarea className="mt-4" placeholder="Descripción..." {...field}></Textarea>
-                </FormControl>
-              </FormItem>
-            )}
-          />
         </div>
       ))}
     </div>

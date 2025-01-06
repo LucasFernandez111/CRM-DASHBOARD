@@ -13,7 +13,6 @@ export const useOrderForRange = ({ startDate = '', endDate = '' }) => {
   const getOrdersForRange = async () => {
     try {
       const res = await ordersService.getOrdersForRange(startDate, endDate);
-      console.log(res);
 
       if (res.data?.orders) {
         setOrders(res.data.orders);

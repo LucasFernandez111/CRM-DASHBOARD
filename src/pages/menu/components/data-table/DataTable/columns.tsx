@@ -64,7 +64,13 @@ export const columns: ColumnDef<SheetData>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div className="text-center font-medium">{row.getValue('price')}</div>;
+      const amount = parseFloat(row.getValue('price'));
+
+      const formatted = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }).format(amount);
+      return <div className="text-center font-medium">{formatted}</div>;
     },
   },
   {

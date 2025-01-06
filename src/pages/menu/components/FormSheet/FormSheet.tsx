@@ -8,16 +8,19 @@ import { AppStore } from '@/redux/store';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
+import { FaSave } from 'react-icons/fa';
 
 export type FormUpdateRowsProps = {
   valueRowSelected: any;
   rangeRowSelected: string;
+  action: 'add' | 'update';
   onRefresh?: () => void;
 };
 
-const FormUpdateRows: React.FC<FormUpdateRowsProps> = ({
+const FormSheet: React.FC<FormUpdateRowsProps> = ({
   valueRowSelected = defaultValuesUpdateRow,
   rangeRowSelected,
+  action,
   onRefresh,
 }) => {
   const userState = useSelector((state: AppStore) => state.user);
@@ -30,13 +33,20 @@ const FormUpdateRows: React.FC<FormUpdateRowsProps> = ({
 
   const onSubmit = async ({ row }: UpdateRowsType) => {
     try {
-      const updatedRows = [Object.values(row)];
+      if (action === 'add') {
+        await sheetProducts.addSheetProducts(userState.sheetId, Object.values(row));
+        alertSuccess('Productos agregados correctamente');
+      }
 
-      await sheetProducts.updateSheetCategories(userState.sheetId, rangeRowSelected, updatedRows);
+      if (action === 'update') {
+        await sheetProducts.updateSheetCategories(userState.sheetId, rangeRowSelected, [Object.values(row)]);
+        alertSuccess('Celda actualizada exitosamente');
+      }
 
       if (onRefresh) onRefresh();
-      alertSuccess('Celda actualizada exitosamente');
     } catch (error) {
+      console.log(error);
+
       alertError('Error al actualizar la celda');
     }
   };
@@ -51,14 +61,13 @@ const FormUpdateRows: React.FC<FormUpdateRowsProps> = ({
           <Input type="number" placeholder="Stock" {...form.register('row.stock')} />
         </div>
         <div className="flex justify-between">
-          <Button variant={'outline'} type="submit" onClick={() => form.reset({ row: defaultValuesUpdateRow })}>
-            Eliminar
+          <Button type="submit">
+            <FaSave color="white" />
           </Button>
-          <Button type="submit">Actualizar</Button>
         </div>
       </form>
     </Form>
   );
 };
 
-export default FormUpdateRows;
+export default FormSheet;

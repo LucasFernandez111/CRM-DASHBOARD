@@ -7,6 +7,7 @@ export const UserUpdateSchema = z.object({
   address: z.string().optional(),
   company: z.string().optional(),
   sheetId: z.string().optional(),
+  alias: z.string().optional(),
 });
 
 //Lo convertimos a un type

@@ -41,7 +41,6 @@ export interface OrderAddress {
 export interface OrderItem {
   category: string;
   subcategory: string;
-  description: string;
   quantity: number;
   price: number;
 }

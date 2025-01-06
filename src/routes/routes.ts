@@ -1,5 +1,5 @@
 export const PublicRoutes = {
-  LOGIN: '/login',
+  UNAUTHORIZED: '/unauthorized',
   AUTH_GOOGLE: '/auth/google',
 };
 

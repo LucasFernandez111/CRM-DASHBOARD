@@ -5,14 +5,15 @@ import { Form, FormField } from '@/components/ui/form';
 import { useNotification } from '@/hooks';
 import { UserUpdateSchema, UserUpdateType } from '@/pages/orders/schema/form.update.user.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { isEmptyObject } from '../../utils';
 import { users } from '@/api';
 import { useDispatch } from 'react-redux';
 import { modifyUser } from '@/redux/states';
+import { FaSave } from 'react-icons/fa';
 
-const FormUpdateUser: React.FC<{}> = ({}) => {
+const FormUpdateUser = () => {
   const { alertError, alertSuccess } = useNotification();
   const dispatch = useDispatch();
   const form = useForm<UserUpdateType>({
@@ -22,6 +23,7 @@ const FormUpdateUser: React.FC<{}> = ({}) => {
       address: '',
       company: '',
       sheetId: '',
+      alias: '',
     },
   });
   useEffect(() => {
@@ -36,8 +38,7 @@ const FormUpdateUser: React.FC<{}> = ({}) => {
     const updatedUser = Object.fromEntries(Object.entries(user).filter(([_, value]) => value !== ''));
 
     try {
-      const result = await users.updateUser(updatedUser as UserUpdateType);
-      console.log(result);
+      await users.updateUser(updatedUser as UserUpdateType);
 
       dispatch(modifyUser(updatedUser as UserUpdateType));
       alertSuccess('Usuario actualizado exitosamente');
@@ -47,7 +48,7 @@ const FormUpdateUser: React.FC<{}> = ({}) => {
   };
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-2 gap-5 ">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="grid grid-cols-1 gap-5 ">
         <FormField
           control={form.control}
           name="phone"
@@ -69,9 +70,16 @@ const FormUpdateUser: React.FC<{}> = ({}) => {
           render={({ field }) => <FormInputField label="ID sheet" field={field} type="text" />}
         />
 
-        <Button type="submit" className="col-span-1  ">
-          Guardar
-        </Button>
+        <FormField
+          control={form.control}
+          name="alias"
+          render={({ field }) => <FormInputField label="Alias" field={field} type="text" />}
+        />
+        <div className="flex justify-end">
+          <Button type="submit" className="  ">
+            <FaSave color="white" />
+          </Button>
+        </div>
       </form>
     </Form>
   );

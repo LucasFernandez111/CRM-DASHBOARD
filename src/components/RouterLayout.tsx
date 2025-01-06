@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import NavBar from './NavBar';
 import { SideBar } from './SideBar';
 
 export const RouterLayout: React.FC<{}> = () => {
-  return (
-    <div className="grid min-h-screen grid-cols-12 grid-rows-[auto_1fr]">
-      <NavBar />
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-      <SideBar />
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+  return (
+    <div className="h-screen flex flex-col">
+      <NavBar toggleSidebar={toggleSidebar} />
+
+      <SideBar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
       <Outlet />
     </div>

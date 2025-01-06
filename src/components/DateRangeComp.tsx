@@ -3,7 +3,6 @@ import { addDays, format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { DateRangePicker, Range } from 'react-date-range';
 import { DateContext } from '@/context/DateContextProvider';
-import AppState from '@/common/interfaces/appState.interface';
 
 interface Props {
   isOpen: boolean;
@@ -12,7 +11,7 @@ interface Props {
 
 const DateRangeComp = ({ isOpen, setIsOpen }: Props) => {
   const { setDateRangeFilter } = useContext(DateContext);
-  const [dateRange, setDateRange] = useState<AppState['dateRange']>([
+  const [dateRange, setDateRange] = useState<any>([
     {
       startDate: new Date(),
       endDate: addDays(new Date(), 7),

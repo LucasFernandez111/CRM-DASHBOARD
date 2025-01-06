@@ -1,5 +1,4 @@
 export * from './home/index';
-export * from './login/index';
 export * from './menu/components/data-table/DataTable/columns';
 export * from './menu/components/data-table/DataTable/DataTable';
 export * from './menu/index';

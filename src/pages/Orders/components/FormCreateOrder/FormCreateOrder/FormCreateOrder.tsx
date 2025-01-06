@@ -1,9 +1,10 @@
 import { orders, OrderStatus, PaymentMethod } from '@/api';
+import { ScrollArea } from '@/components';
+import { FormSelectField } from '@/components/FormSelectField';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
-import { FormSelectField } from '@/components/FormSelectField';
-import { useNotification, useSheetProducts } from '@/hooks';
+import { useNotification } from '@/hooks';
 import {
   createOrderSchema,
   CreateOrderType,
@@ -12,8 +13,8 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { FormInputField } from '../../../../../components/FormInputField';
-import { ScrollArea } from '@/components';
 import { FormAddItem } from '../../FormAddItem';
+import { sanitizedStringToNumber } from '@/utils/sanitizeds';
 import { useEffect } from 'react';
 
 type FormCreateOrderProps = {
@@ -27,41 +28,40 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onRefresh }) => {
     mode: 'onTouched',
   });
 
-  const { products } = useSheetProducts();
   const { alertError, alertSuccess } = useNotification();
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'items',
   });
 
-  useEffect(() => {
-    console.log(form.watch());
-  }, [form.watch()]);
-  const extractPrice = (input: string): number => {
-    const sanitizedInput = input.replace(/[^\d.,]/g, '').replace(/,/g, '');
-    return parseFloat(sanitizedInput);
-  };
-
   const onSubmit = async (values: CreateOrderType) => {
-    console.log(values);
+    try {
+      await orders.createOrder(values);
 
-    // try {
-    //   await orders.createOrder(values);
+      alertSuccess('Orden creada correctamente');
 
-    //   alertSuccess('Orden creada correctamente');
+      form.reset(defaultCreateOrderValues);
 
-    //   form.reset(defaultCreateOrderValues);
+      onRefresh();
+    } catch (error) {
+      console.log(error);
 
-    //   onRefresh();
-    // } catch (error) {
-    //   alertError('Error al crear la orden');
-    // }
+      alertError('Error al crear la orden');
+    }
   };
+
+  useEffect(() => {
+    console.log(form.watch('items'));
+    console.log(form.formState.errors);
+  });
 
   const getTotalAmount = () => {
-    form.watch('items');
-
-    return form.getValues('items').reduce((total: number, item: any) => total + item.totalAmount, 0);
+    return (
+      form.getValues('items').reduce((total: number, item: any) => {
+        if (typeof item.price == 'string') return total + sanitizedStringToNumber(item.price);
+        return total + item.price;
+      }, 0) || 0
+    );
   };
 
   return (
@@ -117,7 +117,7 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onRefresh }) => {
         />
 
         <ScrollArea className="col-span-3 h-80 border p-4 rounded-lg">
-          <FormAddItem fields={fields} form={form} products={products} />
+          <FormAddItem fields={fields} form={form} />
         </ScrollArea>
 
         <FormField
@@ -133,12 +133,11 @@ const FormCreateOrder: React.FC<FormCreateOrderProps> = ({ onRefresh }) => {
         />
 
         <section className="flex items-end justify-end col-span-3 pr-3  ">
-          <h1>TOTAL: </h1>
+          <h1>
+            TOTAL: <span className="font-black">${getTotalAmount()}</span>{' '}
+          </h1>
         </section>
-        <Button
-          type="button"
-          onClick={() => append({ category: '', subcategory: '', quantity: 1, price: '', description: '' })}
-        >
+        <Button type="button" onClick={() => append({ category: '', subcategory: '', quantity: 1, price: 0 })}>
           +
         </Button>
 

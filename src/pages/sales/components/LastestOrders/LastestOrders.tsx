@@ -6,7 +6,7 @@ export type LastestOrdersProps = {
   // types...
 };
 
-const LastestOrders: React.FC<LastestOrdersProps> = ({}) => {
+const LastestOrders: React.FC<LastestOrdersProps> = () => {
   return (
     <Card className="space-y-4 ">
       <CardHeader>

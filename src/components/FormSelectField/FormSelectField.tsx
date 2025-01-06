@@ -5,7 +5,7 @@ import React from 'react';
 export type FormSelectFieldProps = {
   label: string;
   field: any;
-  placeholder?: string;
+  placeholder?: string | number;
   disable?: boolean;
   options: string[];
   className?: string;

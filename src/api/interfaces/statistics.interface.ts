@@ -1,7 +1,6 @@
 export interface StatisticsSales {
   total: number;
   current: StatisticsSalesCurrent;
-  periodSales: StatisticsSalesPeriod;
 }
 
 export interface StatisticsSalesCurrent {

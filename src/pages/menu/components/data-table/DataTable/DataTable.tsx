@@ -14,7 +14,11 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import { useState } from 'react';
-import { FormUpdateRows } from '../../FormUpdateRows';
+import { FormSheet } from '../../FormSheet';
+import { sheetProducts } from '@/api';
+import { AppStore } from '@/redux/store';
+import { useSelector } from 'react-redux';
+import { useNotification } from '@/hooks';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -26,6 +30,7 @@ const DataTable = <TData, TValue>({ columns, data, onRefreshFetchTable }: DataTa
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
+  const { alertError, alertSuccess } = useNotification();
 
   const table = useReactTable({
     data,
@@ -44,14 +49,28 @@ const DataTable = <TData, TValue>({ columns, data, onRefreshFetchTable }: DataTa
     },
   });
 
+  const userState = useSelector((state: AppStore) => state.user);
+
   const getFirstRowSelected = () => table.getFilteredSelectedRowModel().rows[0];
 
   const getFirstRowSelectedValue = () => getFirstRowSelected()?.original;
 
-  const getFirstRowSelectedRange = () => `A${getFirstRowSelected()?.index + 2}:D${getFirstRowSelected()?.index + 2}`;
+  const getFirstRowSelectedRange = () => `A${getFirstRowSelected()?.index + 3}:D${getFirstRowSelected()?.index + 3}`;
 
   const showButtonModify = (): Boolean => {
     return table.getFilteredSelectedRowModel().rows.length > 0 && table.getFilteredSelectedRowModel().rows.length <= 1;
+  };
+  const handleDeleteRow = async () => {
+    const rowRange = getFirstRowSelectedRange();
+
+    try {
+      await sheetProducts.deleteProducts(userState.sheetId, rowRange);
+
+      await onRefreshFetchTable?.();
+      alertSuccess('Productos eliminados correctamente');
+    } catch (error) {
+      alertError('Error al eliminar los productos');
+    }
   };
 
   return (
@@ -118,24 +137,48 @@ const DataTable = <TData, TValue>({ columns, data, onRefreshFetchTable }: DataTa
           {table.getFilteredSelectedRowModel().rows.length} de {table.getFilteredRowModel().rows.length} filas
           seleccionadas
         </p>
+        <div className="flex gap-2">
+          {showButtonModify() && (
+            <div>
+              <DialogComp
+                buttonTrigger={
+                  <Button variant="outline" size="sm">
+                    Modificar fila
+                  </Button>
+                }
+                description="Modifica la información de las filas seleccionadas ."
+                title="¿Deseas modificar las filas seleccionadas?"
+              >
+                <FormSheet
+                  valueRowSelected={getFirstRowSelectedValue()}
+                  rangeRowSelected={getFirstRowSelectedRange()}
+                  onRefresh={onRefreshFetchTable}
+                  action="update"
+                />
+              </DialogComp>
+              <Button variant="destructive" onClick={() => handleDeleteRow()} size="sm">
+                Borrar
+              </Button>
+            </div>
+          )}
 
-        {showButtonModify() && (
           <DialogComp
             buttonTrigger={
               <Button variant="default" size="sm">
-                Modificar fila
+                Agregar Producto
               </Button>
             }
             description="Modifica la información de las filas seleccionadas ."
             title="¿Deseas modificar las filas seleccionadas?"
           >
-            <FormUpdateRows
+            <FormSheet
               valueRowSelected={getFirstRowSelectedValue()}
               rangeRowSelected={getFirstRowSelectedRange()}
               onRefresh={onRefreshFetchTable}
+              action="add"
             />
           </DialogComp>
-        )}
+        </div>
       </div>
     </div>
   );

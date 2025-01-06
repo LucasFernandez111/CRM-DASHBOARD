@@ -16,8 +16,8 @@ const CauroselOrders: React.FC<CauroselOrdersProps> = ({ orders, onRefresh }) =>
       <CarouselContent>
         {orders.length > 0 ? (
           orders.map((order: Order, index) => (
-            <CarouselItem className="md:basis-1/2 lg:basis-1/3 ">
-              <OrderCard key={index} {...order} onRefresh={onRefresh} />
+            <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 ">
+              <OrderCard {...order} onRefresh={onRefresh} />
             </CarouselItem>
           ))
         ) : (

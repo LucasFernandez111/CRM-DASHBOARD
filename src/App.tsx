@@ -8,19 +8,22 @@ import store from './redux/store';
 import { AppRouter } from './routes/AppRouter';
 import { DateContextProvider } from './context';
 import OrdersProvider from './context/Orders/OrdersProvider';
+import { StatusOnline } from './components/StatusOnline';
 
 function App() {
   return (
-    <BrowserRouter>
-      <DateContextProvider>
-        <Provider store={store}>
-          <Toaster position="top-right" richColors expand={false} />
-          <OrdersProvider>
-            <AppRouter />
-          </OrdersProvider>
-        </Provider>
-      </DateContextProvider>
-    </BrowserRouter>
+    <StatusOnline>
+      <BrowserRouter>
+        <DateContextProvider>
+          <Provider store={store}>
+            <Toaster position="top-right" richColors expand={false} />
+            <OrdersProvider>
+              <AppRouter />
+            </OrdersProvider>
+          </Provider>
+        </DateContextProvider>
+      </BrowserRouter>
+    </StatusOnline>
   );
 }
 

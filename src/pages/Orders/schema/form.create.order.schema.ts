@@ -1,20 +1,20 @@
 import { PaymentMethod, OrderStatus } from '@/api';
+import { sanitizedStringToNumber } from '@/utils/sanitizeds';
 import { z } from 'zod';
 
 // Esquema para items
 const itemSchema = z.object({
   category: z.string().min(1, 'La categoría es obligatoria'),
   subcategory: z.string().min(1, 'La subcategoría es obligatoria'),
-  price: z.string(),
+  price: z.string().transform((val) => sanitizedStringToNumber(val)),
 
   quantity: z
     .string()
-    .min(1, 'La cantidad es obligatoria')
+    .min(1, 'El precio es obligatorio')
     .refine((val) => !isNaN(parseFloat(val)), {
-      message: 'La cantidad debe ser un número válido',
+      message: 'El precio debe ser un número válido',
     })
-    .transform((val) => parseFloat(val)),
-  description: z.string().optional().default('Sin descripción'),
+    .transform((val) => parseFloat(val)), // Transforma el string a número
 });
 
 // Esquema para dirección
@@ -64,9 +64,8 @@ export const defaultCreateOrderValues: CreateOrderType = {
     {
       category: '',
       subcategory: '',
-      description: '',
       quantity: 1,
-      price: '',
+      price: 0,
     },
   ],
   paymentDetails: {

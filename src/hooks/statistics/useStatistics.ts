@@ -1,4 +1,4 @@
-import { StatisticsSales } from '@/api/interfaces/statistics.interface';
+import { StatisticsSales, StatisticsSalesMonth } from '@/api/interfaces/statistics.interface';
 import { StatisticsTopOrder } from '@/api/interfaces/top-order.interface';
 import { statistics } from '@/api/statistics';
 import { useEffect, useState } from 'react';
@@ -14,13 +14,15 @@ export const useStatistics = () => {
       month: 0,
       year: 0,
     },
-    periodSales: {
-      salesMonth: [],
-      salesWeek: '',
-      salesDay: '',
-      salesYear: '',
-    },
   });
+
+  const [statisticsMonths, setStatisticsMonths] = useState<StatisticsSalesMonth[]>([
+    {
+      month: 0,
+      dateMonth: new Date(),
+      total: 0,
+    },
+  ]);
 
   const [statisticsTopOrder, setStatisticsTopOrder] = useState<StatisticsTopOrder>({
     today: {
@@ -53,9 +55,16 @@ export const useStatistics = () => {
         setStatisticsTopOrder(res.data.topOrder);
       })
       .catch(() => alertWarning('Todavia no hay ordenes cargadas'));
+    statistics
+      .getStatisticsMonths()
+      .then((res) => {
+        setStatisticsMonths(res.data);
+      })
+      .catch(() => alertWarning('Error al cargar las estadisticas de los meses'));
   }, []);
   return {
     statisticsTopOrder,
     statisticsGeneral,
+    statisticsMonths,
   };
 };

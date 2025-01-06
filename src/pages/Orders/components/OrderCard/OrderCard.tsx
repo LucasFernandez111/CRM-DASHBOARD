@@ -73,21 +73,20 @@ const OrderCard: React.FC<OrderCardProps> = ({
           <div className="flex space-x-10 items-center justify-center ">
             <div className="w-2/4 uppercase space-y-2 text-lg antialiased font-normal">
               {items.map(
-                (item: OrderItem, index) =>
-                  index <= 1 && (
-                    <>
-                      <div key={index}>
+                (item: OrderItem, i) =>
+                  i <= 1 && (
+                    <div key={i}>
+                      <div>
                         <p>
                           <span className="font-bold text-xl">{item.quantity}</span> X {item.category}
                         </p>
                         <p className="line-clamp-1">{item.subcategory}</p>
                       </div>
                       <Separator className="bg-slate-600 bg-opacity-35" />
-                      {index === 1 && (
+                      {i === 1 && (
                         <DialogComp
                           buttonTrigger={
                             <Badge variant="outline" className="cursor-pointer">
-                              {' '}
                               ver mas...
                             </Badge>
                           }
@@ -104,7 +103,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
                           />
                         </DialogComp>
                       )}
-                    </>
+                    </div>
                   ),
               )}
             </div>

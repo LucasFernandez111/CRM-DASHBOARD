@@ -17,7 +17,7 @@ export const AuthCallbackGuard = () => {
         dispatch(createUser(r.data?.user));
         navigate(PrivateRoutes.SALES);
       })
-      .catch(() => navigate(PublicRoutes.LOGIN));
+      .catch(() => navigate(PublicRoutes.UNAUTHORIZED));
   }, []);
 
   return <></>;

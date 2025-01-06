@@ -1,25 +1,28 @@
 // @see - https://www.electron.build/configuration/configuration
 {
-  $schema: "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
-  appId: "YourAppID",
+  $schema: 'https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json',
+  appId: 'com.okeycorp.miapp',
   asar: true,
-  productName: "CRM OKEYCORP",
+  productName: 'CRM-OKEYSOFTWARE',
+  copyright: 'Copyright © 2025 OkeyCorp',
+  description: 'CRM-OKEYSOFTWARE es un software diseñado para la gestión empresarial eficiente.'
   directories: {
-    output: "release/${version}",
+    output: 'release/${version}',
   },
-  files: ["dist", "dist-electron"],
+  files: ['dist', 'dist-electron'],
   mac: {
-    target: ["dmg"],
-    artifactName: "${productName}-Mac-${version}-Installer.${ext}",
+    target: ['dmg'],
+    artifactName: '${productName}-Mac-${version}-Installer.${ext}',
   },
   win: {
     target: [
       {
-        target: "nsis",
-        arch: ["x64"],
+        target: 'nsis',
+        arch: ['x64'],
       },
     ],
-    artifactName: "${productName}-Windows-${version}-Setup.${ext}",
+    icon:'src/assets/logo_QSr_icon.ico'
+    artifactName: '${productName}-Windows-${version}-Setup.${ext}',
   },
   nsis: {
     oneClick: false,
@@ -28,7 +31,7 @@
     deleteAppDataOnUninstall: false,
   },
   linux: {
-    target: ["AppImage"],
-    artifactName: "${productName}-Linux-${version}.${ext}",
+    target: ['AppImage'],
+    artifactName: '${productName}-Linux-${version}.${ext}',
   },
 }

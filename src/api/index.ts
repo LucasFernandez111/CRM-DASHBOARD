@@ -9,7 +9,6 @@ export * from './interfaces/top-order.interface';
 export * from './interfaces/user.interface';
 export * from './orders';
 export * from './sheet-menu/sheet';
-export * from './sheet-menu/types/menu.type';
 export * from './sheet-menu/types/products.type';
 export * from './statistics';
 export * from './users';

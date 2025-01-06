@@ -3,15 +3,13 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export const UserEmptyState: User = {
   _id: '',
-  id_token: '',
-  refresh_token: '',
-  picture: '',
   firstName: '',
   email: '',
   sheetId: '',
-  company: null,
-  phone: null,
-  address: null,
+  company: '',
+  phone: '',
+  address: '',
+  alias: '',
   createdAt: new Date(),
   updatedAt: new Date(),
 };
@@ -25,6 +23,8 @@ export const userSlice = createSlice({
   initialState: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : UserEmptyState,
   reducers: {
     createUser: (state, action) => {
+      console.log(state);
+
       persistLocalStorageUser(action.payload);
       return action.payload;
     },
